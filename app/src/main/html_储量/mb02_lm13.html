@@ -1,0 +1,107 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<title></title>
+<link href="http://mb02.bctx365.com/lotterymodel13/css/mui.min.css" rel="stylesheet"/>
+<link href="http://mb02.bctx365.com/lotterymodel13/css/page.css" rel="stylesheet"/>
+<script type="text/javascript" src="http://mb02.bctx365.com/style/jquery.min.js"></script>
+<script type="text/javascript" charset="utf-8">
+function setTab(name,cursel,n){
+	for(i=1;i<=n;i++){
+		var menu=document.getElementById(name+i);
+		var con=document.getElementById("con_"+name+"_"+i);
+		menu.className=i==cursel?"hover":"";
+		con.style.display=i==cursel?"block":"none";
+	}
+}
+</script>
+</head>
+<body>
+	<header class="mui-bar mui-bar-nav">
+		<h1 class="mui-title" id="toptitle"></h1>
+	</header>
+	<div class="mui-content">
+		<div id="con_gsb_one_1">
+			<ul class="mui-table-view indexlist">
+					<script type="text/javascript">
+				        $(function(){
+				            $.get("http://mb02.bctx365.com/lotterymodel13/index.php?type=index",function(data){
+				                $('ul.indexlist').html(data);
+				            });
+				        });
+				    </script>
+			</ul>
+		</div>
+		<div id="con_gsb_one_2" style="display:none">
+			<div class="mui-iframe-wrapper">
+				<iframe src="http://m.zhcw.com/kaijiang/kj_live.jsp" width="" height="" ></iframe>
+				<div style="width:100%;height:220px;position: absolute;bottom:16px;background:#f7f7f7;">
+					<ul class="mui-table-view san1">
+						<script type="text/javascript">
+					        $(function(){
+					            $.get("http://mb02.bctx365.com/lotterymodel13/index.php?type=san",function(data){
+					                $('ul.san1').html(data);
+					            });
+					        });
+					    </script>
+					</ul>
+				</div>
+			</div>
+			
+		</div>
+		<div id="con_gsb_one_3" style="display:none">
+			<div class="mui-iframe-wrapper">
+				<iframe src="http://m.zhcw.com/kaijiang/index.jsp" width="" height=""></iframe>
+				<div style="width:100%;height:220px;position: absolute;bottom:16px;background:#f7f7f7;">
+					<ul class="mui-table-view san2">
+						<script type="text/javascript">
+					        $(function(){
+					            $.get("http://mb02.bctx365.com/lotterymodel13/index.php?type=san",function(data){
+					                $('ul.san2').html(data);
+					            });
+					        });
+					    </script>
+					</ul>
+				</div>
+			</div>
+		
+		</div>
+	</div>
+	<div class="ipb48"></div>
+	<footer class="mui-bar ifooter">
+		<div class="mui-row">
+			<div class="mui-col-sm-4 mui-col-xs-4">
+				<div id="gsb_one1" onclick="setTab('gsb_one',1,3)" class="hover">
+					<div class="mui-media-body">首页</div>
+				</div>
+			</div>
+			<div class="mui-col-sm-4 mui-col-xs-4">
+				<div id="gsb_one2" onclick="setTab('gsb_one',2,3)">
+					<div class="mui-media-body">直播</div>
+				</div>
+			</div>
+			<div class="mui-col-sm-4 mui-col-xs-4">
+				<div id="gsb_one3" onclick="setTab('gsb_one',3,3)">
+					<div class="mui-media-body">开奖</div>
+				</div>
+			</div>
+		</div>
+	</footer>
+	
+	<script>
+			
+	function loadjs(title,banner1,top_color,body,banner2) {
+		$('body').addClass(body);
+		$('h1#toptitle').text(title);
+		var aar=body+'_'+title+'_'+banner1+'_'+banner2+'_'+top_color+'_';
+		return aar;
+	}
+</script>
+
+</body>
+</html>

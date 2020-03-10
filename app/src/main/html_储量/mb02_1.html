@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,width=device-width,user-scalable=no,minimal-ui">
+	<meta content="yes" name="apple-mobile-web-app-capable">
+	<meta content="yes" name="apple-touch-fullscreen">
+	<meta http-equiv="Cache-Control" content="no-transform"/>
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+	<meta content="black" name="apple-mobile-web-app-status-bar-style">
+	<meta content="telephone=no, email=no" name="format-detection">
+	<meta content="no" name="wap-font-scale">
+	<title></title>
+	<link rel="stylesheet" href="http://mb02.bctx365.com/style/news.css">
+</head>
+<body>
+	<header>
+		<h1>
+			彩票宝典
+		</h1>
+	</header>
+	<img class="banner" src="http://mb02.bctx365.com/Public/style/img/banner/yh_ks.jpg" alt="">
+	<div class="mian_tishi">
+    <div class="tishi">
+		<img src="http://mb02.bctx365.com/style/close.png" alt="">
+        <h1>暂未开放</h1>
+    </div>
+    </div>
+	<div id="top_nax">
+		<div id="box">
+			<ul id="nav">
+				<li class="avction"><a href="http://mb02.bctx365.com/index.html"><h1>中奖报道</h1></a></li>
+				<li><a href="http://mb02.bctx365.com/news_dsfc.html"><h1>地市风采</h1></a></li>
+				<li><a href="http://mb02.bctx365.com/news_cmgs.html"><h1>彩民故事</h1></a></li>
+				<li class="kjhm"><h1>开奖号码</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="news_box" class="main">
+		<ul id="news_ul">
+			
+		</ul>
+		<div class="news_gd">点击更多</div>
+	</div>
+	<script src="http://mb02.bctx365.com/style/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(function () {
+      AddSth();
+    });
+    $(function () {
+      $(".main").unbind("scroll").bind("scroll", function (e) {
+        var sum = this.scrollHeight;
+        alert(sum);
+        if (sum <= $(this).scrollTop() + $(this).height()) {
+          AddSth();
+        }
+      });
+    });
+    var num=7;
+    var num_i=0;
+    function AddSth() {
+    	var addulli='';
+      $.ajax({
+        type: 'GET',
+        url: "http://mb02.bctx365.com/news.php?carnews_type=zhongjiangbaodao",
+        dataType: "json",
+        success: function (data) {
+        	num_i=data['count'];
+        	$.each(data['data'],function(i,val){
+        		if(num==7){
+        			if(i<=7){
+        				addulli +='<li><a href="newsdate.html?id='+val['carnews_id']+'"><b class="limg"><img src="http://mb02.bctx365.com'+val['carnews_img']+'" alt=""></b><u class="rtit"><strong>'+val['carnews_title']+'</strong><p class="time"><span>'+val['carnews_t']+'</span></p><p class="info">'+val['carnews_info']+'</p></u></a></li>';
+        			}
+        		}else{
+        			if (i > num-5 && i <= num) {
+        				addulli +='<li><a href="newsdate.html?id='+val['carnews_id']+'"><b class="limg"><img src="http://mb02.bctx365.com'+val['carnews_img']+'" alt=""></b><u class="rtit"><strong>'+val['carnews_title']+'</strong><p class="time"><span>'+val['carnews_t']+'</span></p><p class="info">'+val['carnews_info']+'</p></u></a></li>';
+        			}
+        		}
+        	});
+        	$("#news_ul").append(addulli);
+			$('.news_box ul li a b img').error(function(){
+				$(this).parent('b').css('display','none');
+			});
+        },error:function(data,statsu){
+			alert("发送请求失败！");
+		}
+      });
+    }
+
+    
+    $('.news_gd').click(function(){
+    	if (num_i-7>num) {
+    		num=num+7;
+	    	 AddSth();
+    	 } else {
+    	 	$('.news_gd').text("没有数据了");
+    	 }
+    });
+    $('.kjhm').click(function(){
+       $('.top_nax').css('display','block');
+    });
+    $('.tishi img').click(function(){
+       $('.top_nax').css('display','none');
+    });
+  </script>
+
+<script>
+
+  function loadjs(title,banner1,top_color,body,banner2){
+    $('header h1').text(title);
+    $('header,.avction').css('background',top_color);
+	$('img.banner').attr('src','http://mb02.bctx365.com/public/style/img/banner/'+banner1);
+    var aar=body+'_'+title+'_'+banner1+'_'+banner2+'_'+top_color+'_';
+    return aar;
+}
+</script>
+</body>
+</html>

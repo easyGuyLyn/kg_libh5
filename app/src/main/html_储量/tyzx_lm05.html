@@ -1,0 +1,114 @@
+
+ <!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+		<meta name="description" content="">
+		<meta name="author" content="">
+		<meta name="keyword" content="">
+		<title>首页</title>
+		<link rel="stylesheet" href="http://tyzx.bctx365.com/lm5/css/swiper.css" type="text/css" />
+		<link rel="stylesheet" href="http://tyzx.bctx365.com/lm5/bootstrap/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="http://tyzx.bctx365.com/lm5/css/style.css" type="text/css" />
+		<link rel="stylesheet" href="http://tyzx.bctx365.com/lm5/css/animate.css" type="text/css" />
+		<link rel="stylesheet" href="http://tyzx.bctx365.com/lm5/css/mat/css/materialdesignicons.min.css" />
+
+		<link rel="stylesheet" href="http://tyzx.bctx365.com/lm5/css/style_new.css" type="text/css" />
+		<script type="text/javascript" src="http://tyzx.bctx365.com/lm5/js/jquery-3.1.1.min.js" type="text/javascript"></script>
+		<script type="text/javascript" src="http://tyzx.bctx365.com/lm5/js/all.js" type="text/javascript"></script>
+		<script type="text/javascript" src="http://tyzx.bctx365.com/lm5/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+	</head>
+
+	<body>
+		<div class="viewport">
+			<!--导航-->
+			<div class="navbar navbar-inverse navbar-fixed-top">
+				<div class="container">
+					<div class="navbar-header clear">
+						<h1 style="font-size: 22px;font-weight: bold;" id="toptitle">
+							首页
+						</h1>
+					</div>
+				</div>
+			</div>
+			<div class="index-box">
+				<!--轮播图-->
+				<div class="swiper-container swiper-container-horizontal swiper-container-ios">
+					<div class="swiper-wrapper">
+						<div class="swiper-slide"><img src="http://tyzx.bctx365.com/lm5/img/br1.jpg" class="carImg" /></div>
+					</div>
+				</div>
+				<!--轮播图-->
+				<div class="index-top history">
+					<div class="row">
+						<a href="http://tyzx.bctx365.com/lm5/newslist.html?newstype_bigtype=tiyuzixun&newstype_ltype=lanqiuxinwen">
+							<div class="col-md-3 col-sm-6 col-xs-6 indexSecCol indexSecCol1 animated fadeInLeft">
+								<p>篮球新闻</p>
+								<img src="http://tyzx.bctx365.com/lm5/img/1.png" />
+							</div>
+						</a>
+						<a href="http://tyzx.bctx365.com/lm5/newslist.html?newstype_bigtype=nbasaishi&newstype_ltype=dongbusaishi">
+							<div class="col-md-3 col-sm-6 col-xs-6 indexSecCol indexSecCol3 animated fadeInUp">
+								<p>东部赛事</p>
+								<img src="http://tyzx.bctx365.com/lm5/img/2.png" />
+							</div>
+						</a>
+						<a href="http://tyzx.bctx365.com/lm5/newslist.html?newstype_bigtype=nbasaishi&newstype_ltype=xibusaishi">
+							<div class="col-md-3 col-sm-6 col-xs-6 indexSecCol indexSecCol3 animated fadeInUp">
+								<p>西部赛事</p>
+								<img src="http://tyzx.bctx365.com/lm5/img/3.png" />
+							</div>
+						</a>
+						<a href="http://tyzx.bctx365.com/lm5/newslist.html?newstype_bigtype=saishifenxi&newstype_ltype=zuqiufenxi">
+							<div class="col-md-3 col-sm-6 col-xs-6 indexSecCol indexSecCol1 animated fadeInRight">
+								<p>篮球分析</p>
+								<img src="http://tyzx.bctx365.com/lm5/img/4.png" />
+							</div>
+						</a>
+					</div>
+				</div>
+				<div class="index-cen history">
+					<div class="row">
+						<div class="col-sm-6 col-md-4 animated fadeInUp">
+						<a href="http://tyzx.bctx365.com/lm5/newslist.html?newstype_bigtype=saishifenxi">
+							<div class="thumbnail">
+								<img src="http://tyzx.gsjyjd.com/Public/style/images/2019-01-02/jkdhacgzh2y6nq8ndhc9en9c6c6kytnm.jpg" alt="...">
+								<div class="caption">
+									<h3>赛事分析</h3>
+								</div>
+							</div>
+							</a>
+						</div>
+						<div class="col-sm-6 col-md-4 animated fadeInUp">
+						<a href="http://tyzx.bctx365.com/lm5/newslist.html?newstype_bigtype=nbasaishi">
+							<div class="thumbnail">
+								<img src="http://tyzx.gsjyjd.com/Public/style/images/2019-01-03/l5atavrv772qos9c0jokh5fd37mqvl1q.jpg" alt="...">
+								<div class="caption">
+									<h3>NBA赛事</h3>
+								</div>
+							</div>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script>
+		
+			function loadjs(title,banner1,top_color,body,banner2) {
+				$('body').addClass(body);
+				$('h1#toptitle').text(title);
+				if(!banner1 || banner1 == ''){
+					
+				}else{
+					$('#banner').attr('src','http://mb02.bctx365.com/Public/style/img/banner/'+banner1);
+				}
+				//$('.header').css('background',top_color);
+				var aar=body+'_'+title+'_'+banner1+'_'+banner2+'_'+top_color+'_';
+				return aar;
+			}
+		</script>
+	</body>
+
+</html>

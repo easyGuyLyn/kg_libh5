@@ -1,0 +1,148 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8"> 
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="Cache-Control" content="no-transform"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="layoutmode" content="standard">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="renderer" content="webkit">
+<meta content="always" name="referrer">
+<link href="http://mb02.bctx365.com/lotterymodel11/style/lm11.css" rel="stylesheet">
+ <script type="text/javascript" src="http://mb02.bctx365.com/style/jquery.min.js"></script>
+
+</head>
+
+<body>
+	<div class="header tc">
+		<h1 id="toptitle">首页</h1>
+		<a href="http://mb02.bctx365.com/lotterymodel11/fankui.php"><img class="topfk" src="http://mb02.bctx365.com/lotterymodel11/style/fk.png"/></a>
+	</div>
+	<img id="banner" src="http://mb02.bctx365.com/public/style/img/banner/moren.jpg"/>
+	
+
+	<div class="cz_nax">
+			<ul>
+				<li>
+					<a href="http://mb02.bctx365.com/lotterymodel11/kjlist.php?lottery=1">
+						<img src="http://mb02.bctx365.com/lotterymodel6/style/cz/1.png"><span>双色球</span>
+					</a>
+				</li>
+				<li>
+					<a href="http://mb02.bctx365.com/lotterymodel11/kjlist.php?lottery=2">
+						<img src="http://mb02.bctx365.com/lotterymodel6/style/cz/2.png"><span>福彩3D</span>
+					</a>
+				</li>
+				<li>
+					<a href="http://mb02.bctx365.com/lotterymodel11/kjlist.php?lottery=3">
+						<img src="http://mb02.bctx365.com/lotterymodel6/style/cz/3.png"><span>七乐彩</span>
+					</a>
+				</li>
+				<li>
+					<a href="http://mb02.bctx365.com/lotterymodel11/kjlist.php?lottery=4">
+						<img src="http://mb02.bctx365.com/lotterymodel6/style/cz/4.png"><span>大乐透</span>
+					</a>
+				</li>
+				<li>
+					<a href="http://mb02.bctx365.com/lotterymodel11/kjlist.php?lottery=5">
+						<img src="http://mb02.bctx365.com/lotterymodel6/style/cz/5.png"><span>排列三</span>
+					</a>
+				</li>
+				<li>
+					<a href="http://mb02.bctx365.com/lotterymodel11/kjlist.php?lottery=6">
+						<img src="http://mb02.bctx365.com/lotterymodel6/style/cz/6.png"><span>排列五</span>
+					</a>
+				</li>
+				<li>
+					<a href="http://mb02.bctx365.com/lotterymodel11/kjlist.php?lottery=7">
+						<img src="http://mb02.bctx365.com/lotterymodel6/style/cz/7.png"><span>七星彩</span>
+					</a>
+				</li>
+				<li>
+					<a href="http://mb02.bctx365.com/lotterymodel11/kjlist.php?lottery=16">
+						<img src="http://mb02.bctx365.com/lotterymodel6/style/cz/16.png"><span>赛车pk10</span>
+					</a>
+				</li>
+			</ul>
+		</div>
+
+<div class="new_kj">
+	<script type="text/javascript">
+        $(function(){
+            $.get("http://mb02.bctx365.com/lotterymodel11/index.php?type=kj",function(data){
+                $('.new_kj').html(data);
+            });
+        });
+    </script>
+</div>
+
+
+
+<section class="carnews_box">
+	<div class="newstype">
+		<div class="fl_icon"></div>
+		<div class="fl_title">火热动态</div>
+	</div>
+	<div class="news_list">
+		<div class="news_box">
+
+
+			<script type="text/javascript">
+                $(function(){
+                    $.get("http://mb02.bctx365.com/lotterymodel11/index.php?type=news",function(data){
+                        $('.news_box').append(data);
+                        $('.box_img').error(function(){
+                            $(this).attr("src","http://mb02.bctx365.com/lotterymodel7/style/cz/moren.png");
+                        });
+                    });
+                });
+            </script>
+
+			
+		</div>
+	</div>
+</section>
+
+	<footer id="footer">仅提供国家彩票开奖信息查询,不提供任何彩票销售业务。</footer>
+	<div style="width: 100%;height: 75px;"></div>
+	<nav id="nav" style="width: 100%;position:fixed;z-index:999;bottom:0;">
+		<ul>
+		  	<li style="border:none;width:25%;">
+		  		<a href="/">
+		  			<i><img src="http://mb02.bctx365.com/lotterymodel11/style/b1_1.png"></i><span>首页</span>
+		  		</a>
+		  	</li>
+		  	<li style="border:none;width:25%;">
+		  		<a href="http://mb02.bctx365.com/lotterymodel11/kj.php">
+		  			<i><img src="http://mb02.bctx365.com/lotterymodel11/style/b4_1.png"></i><span style="">开奖</span>
+		  		</a>
+		  	</li>
+		  	<li style="border:none;width:25%;">
+		  		<a href="http://mb02.bctx365.com/lotterymodel11/zst.php">
+		  			<i><img src="http://mb02.bctx365.com/lotterymodel11/style/b2_1.png"></i><span>走势图</span>
+		  		</a>
+		  	</li>
+		  	<li style="border:none;width:25%;">
+		  		<a href="http://mb02.bctx365.com/lotterymodel11/news.php">
+		  			<i><img src="http://mb02.bctx365.com/lotterymodel11/style/b3_1.png"></i><span>资讯</span>
+		  		</a>
+		  	</li>
+		</ul>
+	</nav>
+
+
+	<script>
+			
+			function loadjs(title,banner1,top_color,body,banner2) {
+				$('body').addClass(body);
+				$('h1#toptitle').text(title);
+				$('#banner').attr('src','http://mb02.bctx365.com/Public/style/img/banner/'+banner1);
+				var aar=body+'_'+title+'_'+banner1+'_'+banner2+'_'+top_color+'_';
+				return aar;
+			}
+		</script>
+</body>
+</html>

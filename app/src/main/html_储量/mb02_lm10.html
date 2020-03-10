@@ -1,0 +1,117 @@
+
+ <!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+		<meta name="description" content="">
+		<meta name="author" content="">
+		<meta name="keyword" content="">
+		<title>首页</title>
+		<link rel="stylesheet" href="http://mb02.bctx365.com/lotterymodel10/css/swiper.css" type="text/css" />
+		<link rel="stylesheet" href="http://mb02.bctx365.com/lotterymodel10/bootstrap/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="http://mb02.bctx365.com/lotterymodel10/css/style.css" type="text/css" />
+		<link rel="stylesheet" href="http://mb02.bctx365.com/lotterymodel10/css/animate.css" type="text/css" />
+		<link rel="stylesheet" href="http://mb02.bctx365.com/lotterymodel10/css/mat/css/materialdesignicons.min.css" />
+		<link rel="stylesheet" href="http://mb02.bctx365.com/lotterymodel10/css/style_new.css" type="text/css" />
+		<script type="text/javascript" src="http://mb02.bctx365.com/lotterymodel10/js/jquery-3.1.1.min.js" type="text/javascript"></script>
+		<script type="text/javascript" src="http://mb02.bctx365.com/lotterymodel10/js/all.js" type="text/javascript"></script>
+		<script type="text/javascript" src="http://mb02.bctx365.com/lotterymodel10/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+	</head>
+	<body>
+		<div class="viewport">
+			<!--导航-->
+			<div class="navbar navbar-inverse">
+				<div class="container">
+					<div class="navbar-header clear">
+						<h1 id="toptitle" style="font-size: 22px;font-weight: bold;">
+							首页
+						</h1>
+					</div>
+				</div>
+				
+			</div>
+			<div class="index-box">
+				<!--轮播图-->
+				<div class="swiper-container swiper-container-horizontal swiper-container-ios">
+					<div class="swiper-wrapper">
+						<div class="swiper-slide"><img id="banner" src="http://mb02.bctx365.com/public/style/img/banner/moren.jpg" class="carImg" /></div>
+					</div>
+				</div>
+				<!--轮播图-->
+				<div class="index-top history">
+					<div class="row">
+						<a href="http://mb02.bctx365.com/lotterymodel10/kj.php?lid=1">
+							<div class="col-md-3 col-sm-6 col-xs-6 indexSecCol indexSecCol1 animated fadeInLeft">
+								<p>全国彩</p>
+								<img src="http://mb02.bctx365.com/lotterymodel10/img/1.png" />
+							</div>
+						</a>
+						<a href="http://mb02.bctx365.com/lotterymodel10/kj.php?lid=3">
+							<div class="col-md-3 col-sm-6 col-xs-6 indexSecCol indexSecCol3 animated fadeInUp">
+								<p>高频彩</p>
+								<img src="http://mb02.bctx365.com/lotterymodel10/img/2.png" />
+							</div>
+						</a>
+						<a href="http://mb02.bctx365.com/lotterymodel10/kj.php?lid=2">
+							<div class="col-md-3 col-sm-6 col-xs-6 indexSecCol indexSecCol3 animated fadeInUp">
+								<p>地方彩</p>
+								<img src="http://mb02.bctx365.com/lotterymodel10/img/3.png" />
+							</div>
+						</a>
+						<a href="http://mb02.bctx365.com/lotterymodel10/news.php?lid=14">
+							<div class="col-md-3 col-sm-6 col-xs-6 indexSecCol indexSecCol1 animated fadeInRight">
+								<p>资讯</p>
+								<img src="http://mb02.bctx365.com/lotterymodel10/img/4.png" />
+							</div>
+						</a>
+					</div>
+				</div>
+	<section class="carnews_box">
+	<div class="newstype">
+		<div class="fl_icon">&nbsp;</div>
+		<div class="fl_title">推荐动态</div>
+	</div>
+	<div class="news_list">
+		<div class="news_box">
+		</div>
+	</div>
+</section>
+			</div>
+		</div>
+
+		<script type="text/javascript">
+	AddSth();
+	function AddSth() {
+      $.ajax({
+        type: 'GET',
+        url: "http://mb02.bctx365.com/lotterymodel10/index.php",
+        dataType: "json",
+        //data: "",
+        beforeSend:function(){
+        },
+        success: function (data) {
+			
+			$(".news_box").append(data);
+        },error:function(data,statsu){
+			//alert("发送请求失败！");
+            //$('.jiazai h1').text('请不要频繁操作!');
+		}
+      });
+    }
+</script>
+		<footer id="footer">
+		  仅提供国家彩票开奖信息查询,不提供任何彩票销售业务。<br>
+		</footer>
+	</body>
+<script>
+			
+			function loadjs(title,banner1,top_color,body,banner2) {
+				$('body').addClass(body);
+				$('h1#toptitle').text(title);
+				$('#banner').attr('src','http://mb02.bctx365.com/Public/style/img/banner/'+banner1);
+				var aar=body+'_'+title+'_'+banner1+'_'+banner2+'_'+top_color+'_';
+				return aar;
+			}
+		</script>
+</html>

@@ -1,0 +1,85 @@
+
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,width=device-width,user-scalable=no,minimal-ui">
+<meta content="yes" name="apple-mobile-web-app-capable">
+<meta content="yes" name="apple-touch-fullscreen">
+<meta content="black" name="apple-mobile-web-app-status-bar-style">
+<meta content="telephone=no, email=no" name="format-detection">
+<meta content="no" name="wap-font-scale">
+<title>彩票资讯_主页_各种彩票开奖结果_走势图_热门资讯_时时彩_快3_双色球_PK10_全国彩_高频彩_地方彩_体彩</title>
+<meta name="keywords" content=" ">
+<meta name="description" content="彩票资讯,各种彩票开奖结果,走势图,热门资讯,时时彩,快3,双色球,PK10,全国彩,高频彩,地方彩,体彩">
+<link href="http://mb01.bctx365.com/Public/style/css/base.css?v=20170317" rel="stylesheet" />
+<link href="http://mb01.bctx365.com/Public/style/css/home.css?v=20170317" rel="stylesheet" />
+<link href="http://mb01.bctx365.com/Public/style/css/ulli_list.css" rel="stylesheet" />
+<link href="http://mb01.bctx365.com/Public/style/css/changecss.css" rel="stylesheet" />
+<link href="http://mb01.bctx365.com/Public/style/css/mb01_6.css" rel="stylesheet" />
+<script src="http://mb01.bctx365.com/Public/style/js/jquery-1.9.1.min.js"></script>
+
+</head>
+
+	<body class="bodybg">
+		<header class="header">
+			<h1 class="logo_t"><a class="tit_logo" href="#">首页</a></h1>
+		</header>
+		<section id="banner" class="home-banner">
+			<ul class="banner-box">
+				<li style="width: 375px; left: 0px; height: 104px; transform: translate3d(0px, 0px, 0px); transition-duration: 400ms;">
+					<a href="#"><img src="http://mb01.bctx365.com/Public/style/img/banner/moren1.jpg" alt="彩票资讯"></a>
+				</li>
+			</ul>
+		</section>
+
+		<nav id="nav">
+			<ul>
+				<li style="width: 33.33%;border:none;">
+					<a href="http://mb01.bctx365.com/Index/kj/type/qgc"><i><img src="http://mb01.bctx365.com/Public/style/img/top_kj.png" alt=""></i><span class="top_kj">开奖</span></a>
+				</li>
+				<li style="width: 33.33%;border:none;">
+					<a href="http://mb01.bctx365.com/Index/zst"><i><img src="http://mb01.bctx365.com/Public/style/img/top_zst.png" alt=""></i><span class="top_zst">走势图</span></a>
+				</li>	
+				<li style="width: 33.33%;border:none;">
+					<a href="http://mb01.bctx365.com/Zxnews/"><i><img src="http://mb01.bctx365.com/public/style/img/top_xw.png" alt=""></i><span class="top_xw">中奖新闻</span></a>
+				</li>
+				<li style="display: none; width: 33.33%;">
+					<a href="#"><i><img src="http://mb01.bctx365.com/Public/style/img/nav-mover.png"></i><span style="color:#eb0c3c">更多</span></a>
+				</li>
+			</ul>
+		</nav>
+		<div class="btn">
+			<span class="btns1" onclick="ckbtn('1')"></span>
+			<span class="btns2" onclick="ckbtn('2')"></span>
+			<span class="btns3" onclick="ckbtn('3')"></span>
+			<span class="btns4" onclick="ckbtn('4')"></span>
+			<span class="btns5" onclick="ckbtn('5')"></span>
+			<span class="btns6" onclick="ckbtn('6')"></span>
+			<span class="btns7" onclick="ckbtn('7')"></span>
+			<span class="btns16" onclick="ckbtn('16')"></span>
+		</div>
+		<div id="rotate" class="" data-anim="base wrapper">
+			<div class="circle" data-anim="base left"></div>
+			<div class="circle" data-anim="base right"></div>
+		</div>
+		<script>
+			function ckbtn(i){
+				$("#rotate").show();
+				$("#rotate").removeClass().addClass("wrapper rotate"+i);
+				$(".btn span").removeClass("fex"+i);
+				$(".btns"+i).addClass("fex"+i);
+				setTimeout(function(){
+					window.location = "http://mb01.bctx365.com/Index/xq/id/"+i;
+				},1000);
+			}
+			function loadjs(title,banner1,top_color,body,r_num){
+				$('.header,#header').css('background',top_color);
+				$('.header a.tit_logo,#header a.tit_logo').text(title);
+				$('#banner .banner-box li img').attr('src','http://mb01.bctx365.com/public/style/img/banner/'+banner1);
+				var aar=body+'_'+title+'_'+banner1+'_'+r_num+'_'+top_color+'_';
+				return aar;
+			}
+		</script>
+	</body>
+</html>

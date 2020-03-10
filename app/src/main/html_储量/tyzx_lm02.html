@@ -1,0 +1,50 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link href="http://tyzx.bctx365.com/lm2/style/xk-style.css" rel="stylesheet">
+	<script type="text/javascript" src="http://tyzx.bctx365.com/lm1/js/jquery-3.1.1.min.js" type="text/javascript"></script>
+</head>
+
+<body>
+
+<div class="logo"><h1 id="toptitle">首页</h1></div>
+<section class="home clearfix">
+	<ul class="icon-items clearfix">
+		<li class="icon-default"><a href="http://tyzx.bctx365.com/lm2/newslist.html?btype=nbasaishi"><i></i>NBA赛事</a></li>
+		<li class="icon-new"><a href="http://tyzx.bctx365.com/lm2/newslist.html?btype=guojizuqiu"><i></i>国际足球</a></li>
+        <li class="icon-house"><a href="http://tyzx.bctx365.com/lm2/newslist.html?btype=saishipinglun"><i></i>赛事评论</a></li>
+		<li class="icon-sale"><a href="http://tyzx.bctx365.com/lm2/newslist.html?btype=tiyuzixun"><i></i><br>体育资讯</a></li>
+        <li class="icon-home"><a href="http://tyzx.bctx365.com/lm2/newslist.html?btype=saishifenxi"><i></i>赛事分析</a></li> 
+        <li class="icon-video"><a href="http://tyzx.bctx365.com/lm2/newslist.html?btype=nbasaishi&ltype=dongbusaishi"><i></i>东部赛事</a></li>
+        <li class="icon-mall"><a href="http://tyzx.bctx365.com/lm2/newslist.html?btype=nbasaishi&ltype=xibusaishi"><i></i>西部赛事</a></li>
+        <li class="icon-bbs"><a href="http://tyzx.bctx365.com/lm2/newslist.html?btype=tiyuzixun&ltype=zonghexinwen">综合新闻</a></li>
+      	<li class="icon-me"><a href="http://tyzx.bctx365.com/lm2/newslist.html?btype=tiyuzixun&ltype=zuqiuxinwen">足球新闻</a></li>
+        <li class="icon-cqssc"><a href="http://tyzx.bctx365.com/lm2/newslist.html?btype=guojizuqiu&ltype=xijialiansai">西甲联赛</a></li>
+        <li class="icon-tjssc"><a href="http://tyzx.bctx365.com/lm2/newslist.html?btype=guojizuqiu&ltype=dejialiansai">德甲联赛</a></li>
+        <li class="icon-ahks"><a href="http://tyzx.bctx365.com/lm2/newslist.html?btype=saishifenxi&ltype=lanqiufenxi">篮球分析</a></li>
+        <li class="icon-jlks"><a href="http://tyzx.bctx365.com/lm2/newslist.html?btype=saishifenxi&ltype=saishiyuce">赛事预测</a></li>
+	</ul>
+</section>
+		<script>
+		
+			function loadjs(title,banner1,top_color,body,banner2) {
+				$('body').addClass(body);
+				$('h1#toptitle').text(title);
+				if(!banner1 || banner1 == ''){
+					
+				}else{
+					$('#banner').attr('src','http://mb02.bctx365.com/Public/style/img/banner/'+banner1);
+				}
+				//$('.header').css('background',top_color);
+				var aar=body+'_'+title+'_'+banner1+'_'+banner2+'_'+top_color+'_';
+				return aar;
+			}
+		</script>
+</body>
+</html>

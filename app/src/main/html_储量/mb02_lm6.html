@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-type" content="text/html;charset=utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta http-equiv="Cache-Control" content="no-transform"/>
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="layoutmode" content="standard">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name="renderer" content="webkit">
+		<meta content="always" name="referrer">
+		<link href="http://mb02.bctx365.com/lotterymodel6/style/lm6.css" rel="stylesheet">
+	 	<script type="text/javascript" src="http://mb02.bctx365.com/style/jquery.min.js"></script>
+	</head>
+	<body>
+		<div class="header tc"><h1>首页</h1></div>
+		<img id="banner" src="http://mb02.bctx365.com/public/style/img/banner/moren.jpg" />
+		<section id="index" class="I">
+			<div class="indexNav2">
+				<a href="http://mb02.bctx365.com/lotterymodel6/kj.php?type=1">开奖公告</a>
+				<a href="http://mb02.bctx365.com/lotterymodel6/news.php?type=1">中奖资讯</a>
+				<a href="http://mb02.bctx365.com/lotterymodel6/news.php?type=2">地市资讯</a>
+				<a href="http://mb02.bctx365.com/lotterymodel6/news.php?type=3">彩民资讯</a>
+			</div>
+			<div id="mainPage"></div>
+			<script type="text/javascript">
+				function indexajax(){
+					$.get("http://mb02.bctx365.com/lotterymodel6/ajax.php",function(data){
+						$('#mainPage').html(data);
+					});
+				}
+				indexajax();
+			</script>
+		</section>
+		<footer id="footer">仅提供国家彩票开奖信息查询,不提供任何彩票销售业务。</footer>
+		<script>
+			function loadjs(title,banner1,top_color,body,banner2) {
+				$('body').addClass(body);
+				$('.header h1').text(title);
+				$('#banner').attr('src','http://mb02.bctx365.com/Public/style/img/banner/'+banner1);
+				$('.header').css('background',top_color);
+				var aar=body+'_'+title+'_'+banner1+'_'+banner2+'_'+top_color+'_';
+				return aar;
+			}
+		</script>
+	</body>
+</html>

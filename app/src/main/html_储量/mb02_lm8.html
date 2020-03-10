@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-type" content="text/html;charset=utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta http-equiv="Cache-Control" content="no-transform" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="layoutmode" content="standard" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+		<meta name="renderer" content="webkit" />
+		<meta content="always" name="referrer" />
+		<link href="http://mb02.bctx365.com/lotterymodel8/style/lm8.css" rel="stylesheet" />
+		<script type="text/javascript" src="http://mb02.bctx365.com/style/jquery.min.js"></script>
+	</head>
+	<body>
+		<div class="header tc"><h1>首页</h1></div>
+		<div class="top_imggg">
+			<img id="banner" src="http://mb02.bctx365.com/public/style/img/banner/moren.jpg" />
+			<p class="kjgg"><img src="http://mb02.bctx365.com/lotterymodel8/style/gg.png" class="gg" /></p>
+			<div class="box_newkjgg" id="box_newkjgg"><ul class="newkjgg"></ul></div>
+		</div>
+		<div class="cz_nax">
+			<ul>
+				<li>
+					<a href="http://mb02.bctx365.com/lotterymodel8/kjlist.php?id=1">
+						<img src="http://mb02.bctx365.com/lotterymodel8/style/cz/1.png" /><span>双色球</span>
+					</a>
+				</li>
+				<li>
+					<a href="http://mb02.bctx365.com/lotterymodel8/kjlist.php?id=2">
+						<img src="http://mb02.bctx365.com/lotterymodel8/style/cz/2.png" /><span>福彩3D</span>
+					</a>
+				</li>
+				<li>
+					<a href="http://mb02.bctx365.com/lotterymodel8/kjlist.php?id=3">
+						<img src="http://mb02.bctx365.com/lotterymodel8/style/cz/3.png" /><span>七乐彩</span>
+					</a>
+				</li>
+				<li>
+					<a href="http://mb02.bctx365.com/lotterymodel8/kjlist.php?id=4">
+						<img src="http://mb02.bctx365.com/lotterymodel8/style/cz/4.png" /><span>大乐透</span>
+					</a>
+				</li>
+				<li>
+					<a href="http://mb02.bctx365.com/lotterymodel8/kjlist.php?id=5">
+						<img src="http://mb02.bctx365.com/lotterymodel8/style/cz/5.png" /><span>排列三</span>
+					</a>
+				</li>
+				<li>
+					<a href="http://mb02.bctx365.com/lotterymodel8/kjlist.php?id=6">
+						<img src="http://mb02.bctx365.com/lotterymodel8/style/cz/6.png" /><span>排列五</span>
+					</a>
+				</li>
+				<li>
+					<a href="http://mb02.bctx365.com/lotterymodel8/kjlist.php?id=7">
+						<img src="http://mb02.bctx365.com/lotterymodel8/style/cz/7.png" /><span>七星彩</span>
+					</a>
+				</li>
+				<li>
+					<a href="http://mb02.bctx365.com/lotterymodel8/kjlist.php?id=16">
+						<img src="http://mb02.bctx365.com/lotterymodel8/style/cz/16.png" /><span>赛车pk10</span>
+					</a>
+				</li>
+			</ul>
+		</div>
+		<section class="carnews_box">
+			<div class="newstype"><div class="fl_icon"></div><div class="fl_title">火热动态</div></div><div class="news_list"><div class="news_box"></div></div>
+		</section>
+		<footer id="footer">仅提供国家彩票开奖信息查询,不提供任何彩票销售业务。</footer>
+		<div style="width:100%;height:75px;"></div>
+		<nav id="nav" style="width: 100%;position:fixed;z-index:999;bottom:0;">
+			<ul>
+			  	<li style="border:none;width:25%;">
+			  		<a href="http://mb02.bctx365.com/"><i><img src="http://mb02.bctx365.com/lotterymodel8/style/b1_b1_1.png" /></i><span>首页</span></a>
+			  	</li>
+			  	<li style="border:none;width:25%;">
+			  		<a href="http://mb02.bctx365.com/lotterymodel8/kj.php">
+			  			<i><img src="http://mb02.bctx365.com/lotterymodel8/style/b1_b3_1.png" /></i><span style="">开奖</span>
+			  		</a>
+			  	</li>
+			  	<li style="border:none;width:25%;">
+			  		<a href="http://zst.bctx365.com/Ssq/ssq_com6/type/zh">
+			  			<i><img src="http://mb02.bctx365.com/lotterymodel8/style/b1_b2_1.png" /></i><span>走势图</span>
+			  		</a>
+			  	</li>
+			  	<li style="border:none;width:25%;">
+			  		<a href="http://mb02.bctx365.com/lotterymodel8/news.php"><i><img src="http://mb02.bctx365.com/lotterymodel8/style/b1_b4_1.png" /></i><span>资讯</span></a>
+			  	</li>
+			</ul>
+		</nav>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				setInterval('AutoScroll("#box_newkjgg")',3000);
+				$.get("http://mb02.bctx365.com/lotterymodel8/lotteryajax.php",function(data){
+					$(".newkjgg").html(data);
+				});
+				$.get("http://mb02.bctx365.com/lotterymodel8/newsajax.php",function(data){
+					$(".news_box").html(data);
+					$('.bg01 img').error(function(){
+                        $(this).attr("src","http://mb02.bctx365.com/lotterymodel8/style/cz/moren.png");
+                    });
+				});
+			});
+			function AutoScroll(obj) {
+				$(obj).find("ul:first").animate({
+					marginTop: "-25px"
+				},500,function(){
+					$(this).css({marginTop:"0px"}).find("li:first").appendTo(this);
+				});
+			}
+		</script>
+		<script>
+			function loadjs(title,banner1,top_color,body,banner2) {
+				$('body').addClass(body);
+				$('.header h1').text(title);
+				$('#banner').attr('src','http://mb02.bctx365.com/Public/style/img/banner/'+banner1);
+				$('.header').css('background',top_color);
+				var aar=body+'_'+title+'_'+banner1+'_'+banner2+'_'+top_color+'_';
+				return aar;
+			}
+		</script>
+	</body>
+</html>
