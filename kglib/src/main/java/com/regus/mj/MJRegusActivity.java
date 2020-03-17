@@ -229,6 +229,14 @@ public class MJRegusActivity extends Activity {
      * 所有权限检测完毕之后
      */
     private void afterCheckPermision() {
+
+
+        if (!AssistUtils.iConnected(this)) {
+            showNoNetDialog();
+            return;
+        }
+
+
         macAddress = AssistUtils.getMacAddress(this);
         Log.e("regus_mac ", macAddress + "");
 
@@ -249,6 +257,39 @@ public class MJRegusActivity extends Activity {
                 .init(getApplicationContext());
 
         getDt();
+
+    }
+
+
+    void showNoNetDialog() {
+
+        Toast.makeText(this, "网络状态异常", Toast.LENGTH_SHORT);
+
+        //创建dialog构造器
+        AlertDialog.Builder normalDialog = new AlertDialog.Builder(MJRegusActivity.this);
+        //设置title
+        normalDialog.setTitle("网络状态异常");
+        //设置内容
+        normalDialog.setMessage("游戏必要配置需要网络顺畅，请检查您的网络连接，确保网络连接可用");
+        normalDialog.setCancelable(false);
+        //设置按钮
+        normalDialog.setPositiveButton("我已经打开", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                afterCheckPermision();
+            }
+        });
+
+        normalDialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+
+        normalDialog.show();
+
 
     }
 
