@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.support.multidex.MultiDex;
 import android.text.TextUtils;
 
-import com.avos.avoscloud.AVOSCloud;
 import com.regus.base.HostManager;
 import com.regus.mj.config.KGConfig;
 import com.regus.mj.utils.YsdkSignUtil;
@@ -91,14 +90,14 @@ public class BoxApplication extends Application {
 
         KGConfig.getInstance().setApplication(this);
 
-        if (BuildConfig.DEBUG) {
-            AVOSCloud.setDebugLogEnabled(true);
-        }
+//        if (BuildConfig.DEBUG) {
+//            AVOSCloud.setDebugLogEnabled(true);
+//        }
 
 
-        AVOSCloud.initialize(this
-                , "67x9AFJW4h2aT78GEWVVQGWN-gzGzoHsz"
-                , "tbeMiKA9yCmFQXtPDgb8mGsg");
+//        AVOSCloud.initialize(this
+//                , "67x9AFJW4h2aT78GEWVVQGWN-gzGzoHsz"
+//                , "tbeMiKA9yCmFQXtPDgb8mGsg");
 
 //        for (ChanelStoreEnum specialSiteEnum : ChanelStoreEnum.values()) {
 //        AVObject avObject = new AVObject("UpVersion");

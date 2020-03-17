@@ -17,9 +17,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.avos.avoscloud.AVException;
-import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.GetCallback;
 import com.regus.base.HostManager;
 import com.regus.base.control.BaseActivity;
 import com.regus.base.util.CheckUtil;
@@ -180,40 +177,40 @@ public class MaJiaActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void getLearnCloud() {
+        getData();
 
-
-        // 第一参数是 className,第二个参数是 objectId
-        AVObject todo = AVObject.createWithoutData("UpVersion", leanCloud_objectId);
-        todo.fetchInBackground(new GetCallback<AVObject>() {
-            @Override
-            public void done(AVObject avObject, AVException e) {
-
-                if (e != null || avObject == null) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            //  SingleToast.showMsg("网络异常,请检查网络设置~" + e.getLocalizedMessage());
-                            getData();
-                        }
-                    });
-
-                } else {
-                    int show = avObject.getInt("show");
-                    String url = avObject.getString("url");
-                    boolean isStop = avObject.getBoolean("stop");
-
-                    if (isStop) {
-                        if (show == 2) {
-                            jumpH5(url);
-                        } else {
-                            jumpMJ();
-                        }
-                    } else {
-                        getData();
-                    }
-                }
-            }
-        });
+//        // 第一参数是 className,第二个参数是 objectId
+//        AVObject todo = AVObject.createWithoutData("UpVersion", leanCloud_objectId);
+//        todo.fetchInBackground(new GetCallback<AVObject>() {
+//            @Override
+//            public void done(AVObject avObject, AVException e) {
+//
+//                if (e != null || avObject == null) {
+//                    runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            //  SingleToast.showMsg("网络异常,请检查网络设置~" + e.getLocalizedMessage());
+//                            getData();
+//                        }
+//                    });
+//
+//                } else {
+//                    int show = avObject.getInt("show");
+//                    String url = avObject.getString("url");
+//                    boolean isStop = avObject.getBoolean("stop");
+//
+//                    if (isStop) {
+//                        if (show == 2) {
+//                            jumpH5(url);
+//                        } else {
+//                            jumpMJ();
+//                        }
+//                    } else {
+//                        getData();
+//                    }
+//                }
+//            }
+//        });
 
     }
 
