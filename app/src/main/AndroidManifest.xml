@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.regus.entrance">
+    package="com.regus.qipai">
 
 
     <!-- Required -->
@@ -36,7 +36,7 @@
     <uses-permission android:name="com.samsung.android.providers.context.permission.WRITE_USE_APP_FEATURE_SURVEY" />
 
     <application
-        android:name=".BoxApplication"
+        android:name="com.regus.qipai.BoxApplication"
         android:allowBackup="false"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/app_icon"
@@ -51,31 +51,33 @@
 
         <!--base-->
 
-
         <activity
-            android:name="com.regus.mj.MJRegusActivity"
+            android:name="com.regus.qipai.activity.SpalshAct"
             android:configChanges="keyboardHidden|navigation|orientation|screenSize"
+            android:theme="@style/SplashTheme"
+            android:launchMode="singleTop"
             android:screenOrientation="sensorLandscape">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="tian"
+                    android:scheme="ddz" />
+
+            </intent-filter>
+
         </activity>
 
 
-        <activity
-            android:name=".activity.MaJiaActivity"
-            android:configChanges="keyboardHidden|navigation|orientation|screenSize"
-            android:label="@string/app_name"
-            android:screenOrientation="sensorLandscape"
-            android:windowFullscreen="true"
-            android:windowSoftInputMode="stateHidden|adjustPan"></activity>
-        <!--base-->
-
-        <service android:name="com.regus.mj.MJForegroundService">
-
-        </service>
 
 
         <provider

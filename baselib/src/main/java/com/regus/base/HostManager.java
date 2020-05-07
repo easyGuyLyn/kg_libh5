@@ -83,9 +83,6 @@ public class HostManager {
     public void init(
             Context context,
             Handler handler,
-            String H5MJUrl,
-            String appId,
-            String sid,
             String app_name,
             String um_chanel,
             String application) {
@@ -94,19 +91,11 @@ public class HostManager {
 
         mHandler = handler;
 
-        mH5MjURL = H5MJUrl;
-
-        mAppId = appId;
-        mSid = sid;
         application_id = application;
 
         initOKHttpUtils();
 
         loadX5();
-
-
-
-
 
 
     }
