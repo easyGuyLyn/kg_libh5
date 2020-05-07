@@ -37,8 +37,6 @@ android {
 
 
 
-
-
     def isWb = "false"
     //def isWb = "true"
 
@@ -66,12 +64,12 @@ android {
                 keyPassword key_keyPassword
             } else {
                 //读取文件
-                def sdkDir = properties.getProperty('keyFile1')
+                def sdkDir = properties.getProperty('keyFile')
 
                 //读取字段
-                def key_keyAlias = properties.getProperty('keyAlias1')
-                def key_keyPassword = properties.getProperty('keyPassword1')
-                def key_storePassword = properties.getProperty('storePassword1')
+                def key_keyAlias = properties.getProperty('keyAlias')
+                def key_keyPassword = properties.getProperty('keyPassword')
+                def key_storePassword = properties.getProperty('storePassword')
 
                 storeFile file(sdkDir)
                 storePassword key_storePassword
