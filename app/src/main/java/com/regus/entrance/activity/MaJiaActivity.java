@@ -44,8 +44,6 @@ import java.net.URL;
 
 import static com.regus.entrance.BoxApplication.SmPostDetailUrl;
 import static com.regus.entrance.BoxApplication.isOneTabMJ;
-import static com.regus.entrance.BoxApplication.leanCloud_objectId;
-import static com.regus.entrance.BuildConfig.isWaiBao;
 
 public class MaJiaActivity extends BaseActivity implements View.OnClickListener {
     public static final String TAG = "Line  ";

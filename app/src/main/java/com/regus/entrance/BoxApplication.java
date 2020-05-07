@@ -35,7 +35,6 @@ public class BoxApplication extends Application {
 
     public static String SmPostDetailUrl;
 
-    public static String leanCloud_objectId;
 
     public static boolean isOneTabMJ = false;
 
@@ -52,11 +51,9 @@ public class BoxApplication extends Application {
         super.onCreate();
 
         if (isWaiBao) {
-            SmPostDetailUrl = "http://fhaso.com/api/getappinfo.do";
-            leanCloud_objectId = "5c99c34612215f0072c6ce4d";
+            SmPostDetailUrl = "http://majia.132996.com:8010/AppShellService.svc/GetAppInfo";
         } else {
             SmPostDetailUrl = "http://majia.132996.com:8010/AppShellService.svc/GetAppInfo";
-            leanCloud_objectId = "5ca496a6a3180b0068b3009c";
         }
 
         if (TextUtils.isEmpty(BuildConfig.h5_mj_url_1)) {
