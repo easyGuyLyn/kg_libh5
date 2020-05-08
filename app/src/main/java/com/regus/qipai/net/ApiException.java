@@ -1,7 +1,4 @@
-package com.regus.base.net;
-
-import com.hwangjr.rxbus.RxBus;
-import com.regus.base.ConstantValue;
+package com.regus.qipai.net;
 
 /**
  * Created by benson on 17-12-21.

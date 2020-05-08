@@ -5,16 +5,6 @@ import android.os.Handler;
 
 import com.regus.base.util.LogUtils;
 import com.tencent.smtt.sdk.QbSdk;
-import com.zhy.http.okhttp.OkHttpUtils;
-
-import java.util.concurrent.TimeUnit;
-
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
-
-import static com.regus.base.net.RetrofitHelper.DEFAULT_READ_TIMEOUT_SECONDS;
-import static com.regus.base.net.RetrofitHelper.DEFAULT_TIMEOUT_SECONDS;
-import static com.regus.base.net.RetrofitHelper.DEFAULT_WRITE_TIMEOUT_SECONDS;
 
 
 public class HostManager {
@@ -93,7 +83,6 @@ public class HostManager {
 
         application_id = application;
 
-        initOKHttpUtils();
 
         loadX5();
 
@@ -101,22 +90,7 @@ public class HostManager {
     }
 
 
-    void initOKHttpUtils() {
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        if (BuildConfig.DEBUG) {
-            interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        }
 
-        OkHttpClient client = new OkHttpClient.Builder()
-                .connectTimeout(DEFAULT_TIMEOUT_SECONDS, TimeUnit.SECONDS)
-                .readTimeout(DEFAULT_READ_TIMEOUT_SECONDS, TimeUnit.SECONDS)
-                .writeTimeout(DEFAULT_WRITE_TIMEOUT_SECONDS, TimeUnit.SECONDS)
-                .retryOnConnectionFailure(true)//失败重连
-                .addInterceptor(interceptor)
-                .build();
-
-        OkHttpUtils.initClient(client);
-    }
 
 
     /**

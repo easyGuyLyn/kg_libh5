@@ -18,9 +18,9 @@ import cn.jpush.android.api.JPushInterface;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 
-import static com.regus.base.net.RetrofitHelper.DEFAULT_READ_TIMEOUT_SECONDS;
-import static com.regus.base.net.RetrofitHelper.DEFAULT_TIMEOUT_SECONDS;
-import static com.regus.base.net.RetrofitHelper.DEFAULT_WRITE_TIMEOUT_SECONDS;
+import static com.regus.qipai.net.RetrofitHelper.DEFAULT_READ_TIMEOUT_SECONDS;
+import static com.regus.qipai.net.RetrofitHelper.DEFAULT_TIMEOUT_SECONDS;
+import static com.regus.qipai.net.RetrofitHelper.DEFAULT_WRITE_TIMEOUT_SECONDS;
 
 /**
  *
@@ -74,8 +74,6 @@ public class BoxApplication extends Application {
 
         initUm();
     }
-
-
 
 
     void regesterJPush() {

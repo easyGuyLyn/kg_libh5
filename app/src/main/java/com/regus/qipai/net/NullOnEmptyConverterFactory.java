@@ -1,4 +1,4 @@
-package com.regus.base.net;
+package com.regus.qipai.net;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;

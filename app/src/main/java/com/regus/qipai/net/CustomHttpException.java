@@ -1,8 +1,7 @@
-package com.regus.base.net;
+package com.regus.qipai.net;
 
 import android.content.Context;
 
-import com.regus.base.ConstantValue;
 import com.regus.base.HostManager;
 import com.regus.base.R;
 

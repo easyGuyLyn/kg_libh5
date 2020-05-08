@@ -1,4 +1,4 @@
-package com.regus.base.net.rx;
+package com.regus.qipai.net.rx;
 
 import android.content.Context;
 

@@ -1,4 +1,4 @@
-package com.regus.base.net;
+package com.regus.qipai.net;
 
 
 import com.google.gson.Gson;

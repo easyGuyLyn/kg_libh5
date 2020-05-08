@@ -22,7 +22,7 @@
 
 #---------------------------------基本指令区----------------------------------
 # 设置混淆的压缩比率 0 ~ 7
--optimizationpasses 5
+-optimizationpasses 7
 # 混淆后类名都为小写   Aa aA
 -dontusemixedcaseclassnames
 # 指定不去忽略非公共库的类

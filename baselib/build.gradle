@@ -66,10 +66,7 @@ dependencies {
     api "com.android.support:recyclerview-v7:${rootProject.ext.supportVersion}"
     // x5
     api files('libs/tbs_sdk_thirdapp_v3.5.0.1004_43500_sharewithdownload_withoutGame_obfs_20170801_113025.jar')
-    // LeanCloud 基础包
-    // api 'cn.leancloud.android:avoscloud-sdk:v4.7.3'
     // 改 statusBar
-    api 'com.gyf.barlibrary:barlibrary:2.3.0'
     api 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     api 'com.squareup.retrofit2:retrofit:2.3.0'
@@ -89,8 +86,6 @@ dependencies {
     api 'com.youth.banner:banner:1.4.10'
     api 'com.zhy:okhttputils:2.6.2'
     api 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.30'
-    api 'com.guoqi.widget:iosdialog:0.2'
-    api 'com.alibaba:fastjson:1.2.47'
     api 'com.hwangjr.rxbus:rxbus:1.0.6'
     //jpush
     api files('libs/jcore-android-1.2.5.jar')
