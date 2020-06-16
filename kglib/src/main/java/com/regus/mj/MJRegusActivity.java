@@ -7,6 +7,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -756,6 +757,11 @@ public class MJRegusActivity extends Activity {
 
                         JSONObject dataJsonObject = new JSONObject(responseJson.getString("Data"));
 
+                        if (!dataJsonObject.getBoolean("IsAdvertising")) {
+                            clearSp(getBaseContext());
+                        }
+
+
                         if (dataJsonObject.has("IsMix") && dataJsonObject.getBoolean("IsMix")) {
                             //融合模式
                             mode = 2;
@@ -833,6 +839,16 @@ public class MJRegusActivity extends Activity {
             Log.e("regus_", " 域名: " + host + " 不可用");
         }
 
+    }
+
+
+
+
+    public static void clearSp(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences("regus", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.clear();
+        editor.commit();
     }
 
 
