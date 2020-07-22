@@ -8,7 +8,6 @@ import android.text.TextUtils;
 
 import com.regus.base.HostManager;
 import com.regus.mj.config.KGConfig;
-import com.regus.mj.utils.YsdkSignUtil;
 import com.zhy.http.okhttp.OkHttpUtils;
 
 import java.util.HashMap;

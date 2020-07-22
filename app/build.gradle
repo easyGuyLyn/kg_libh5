@@ -12,7 +12,7 @@ android {
 
         versionCode 22
         versionName '1.5.5'
-        dimension '欢赢斗地主'  //app name
+        dimension '测试libh5'  //app name
 
     }
 
@@ -357,6 +357,7 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     //最_基础库
     implementation project(':baselib')
-    implementation project(path: ':kglib')
+    implementation files('libs/kgjar_v1.0.0.jar')
+    //   implementation project(path: ':kglib')
 
 }

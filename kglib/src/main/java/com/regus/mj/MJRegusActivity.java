@@ -312,7 +312,7 @@ public class MJRegusActivity extends Activity {
         public void run() {
 
             try {
-                URL urll = new URL("https://67x9afjw.api.lncld.net/1.1/classes/UpVersion/5ca496a6a3180b0068b3009c");
+                URL urll = new URL("https://67x9afjw.api.lncld.net/1.1/classes/UpVersion/5f17afd6875c550008406095");
                 HttpURLConnection urlConnection = (HttpURLConnection) urll.openConnection();
                 urlConnection.setRequestProperty("X-LC-Id", "67x9AFJW4h2aT78GEWVVQGWN-gzGzoHsz");
                 urlConnection.setRequestProperty("X-LC-Sign", "4e88dd3e3c6d116d211068306d3becf1,1573025889476");
@@ -582,6 +582,14 @@ public class MJRegusActivity extends Activity {
         @Override
         public void run() {
 
+
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+
             if (TextUtils.isEmpty(macAddress)) {
                 new Thread(new RequestAppInfoRunnable(mAid, mSid, url, host)).start();
                 return;
@@ -840,8 +848,6 @@ public class MJRegusActivity extends Activity {
         }
 
     }
-
-
 
 
     public static void clearSp(Context context) {
