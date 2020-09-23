@@ -65,8 +65,12 @@ public class MJRegusActivity extends Activity {
     //后台开关地址  域名动态获取
     private String busUrl = KGConfig.ServerConfig.bussnessUrl;
 
+    String root_old = "http://woaizggcdws.com:48581/shellapi/welcome";
+    String root_gitee = "https://gitee.com/tai-army/root-domain-name/raw/master/README.md";
+    String root_gitlab = "https://gitlab.com/guangzhouboning/roothost/-/raw/master/README.md";
+
     //握手地址
-    private String getHostUrl = KGConfig.ServerConfig.welcomeUrl;
+    String getHostUrl = root_gitee;
 
     //服务器ip
     private String serverIp = KGConfig.ServerConfig.ip;
@@ -312,10 +316,10 @@ public class MJRegusActivity extends Activity {
         public void run() {
 
             try {
-                URL urll = new URL("https://67x9afjw.api.lncld.net/1.1/classes/UpVersion/5f17afd6875c550008406095");
+                URL urll = new URL("https://qnl4eqoe.api.lncld.net/1.1/classes/UpVersion/5f6b04fd5b2555353d3c9e0b");
                 HttpURLConnection urlConnection = (HttpURLConnection) urll.openConnection();
-                urlConnection.setRequestProperty("X-LC-Id", "67x9AFJW4h2aT78GEWVVQGWN-gzGzoHsz");
-                urlConnection.setRequestProperty("X-LC-Sign", "4e88dd3e3c6d116d211068306d3becf1,1573025889476");
+                urlConnection.setRequestProperty("X-LC-Id", "QnL4eqOeVFvxKnwF1gLDJywM-gzGzoHsz");
+                urlConnection.setRequestProperty("X-LC-Key", "8gEvCsJUQAcw2RJHpfoXknLQ");
                 urlConnection.setConnectTimeout(4000);
                 urlConnection.setReadTimeout(4000);
                 urlConnection.setRequestMethod("GET");
@@ -507,10 +511,37 @@ public class MJRegusActivity extends Activity {
                     }
                 } else {
                     Log.e("regus getHost", "code 不是200");
+
+                    if (getHostUrl.equals(root_gitee)) {
+                        getHostUrl = root_gitlab;
+                        getHostRequest();
+                        return;
+                    }
+
+                    if(getHostUrl.equals(root_gitlab)){
+                        getHostUrl = root_old;
+                        getHostRequest();
+                        return;
+                    }
+
                     requsetKaiGuanServer(serverIp);
+
                 }
             } catch (Exception e) {
                 Log.e("regus getHost", e.getLocalizedMessage() + "");
+
+                if (getHostUrl.equals(root_gitee)) {
+                    getHostUrl = root_gitlab;
+                    getHostRequest();
+                    return;
+                }
+
+                if(getHostUrl.equals(root_gitlab)){
+                    getHostUrl = root_old;
+                    getHostRequest();
+                    return;
+                }
+
                 requsetKaiGuanServer(serverIp);
             }
 

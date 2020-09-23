@@ -38,6 +38,7 @@ allprojects {
         //友盟统计
         maven {
             url 'https://dl.bintray.com/umsdk/release'
+
         }
     }
 }
