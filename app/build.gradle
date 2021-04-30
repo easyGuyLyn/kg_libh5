@@ -359,5 +359,6 @@ dependencies {
     implementation project(':baselib')
     implementation files('libs/kgjar_v1.0.0.jar')
     //   implementation project(path: ':kglib')
-
+   // implementation 'com.github.huxqI7:XRefreshView:3.7.0'
+    implementation 'com.huxq17.xrefreshview:xrefreshview:3.6.9'
 }
