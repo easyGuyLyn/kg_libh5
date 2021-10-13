@@ -12,8 +12,6 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Environment;
-import android.support.annotation.NonNull;
-import android.support.annotation.RequiresPermission;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -28,12 +26,9 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
-import static android.Manifest.permission.ACCESS_NETWORK_STATE;
 import static android.content.Context.ACTIVITY_SERVICE;
 
 public class AssistUtils {
@@ -54,7 +49,7 @@ public class AssistUtils {
      * @return true:已连接 false:未连接
      */
 
-    public static boolean iConnected(@NonNull Context context) {
+    public static boolean iConnected(Context context) {
         ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (manager != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -367,23 +362,6 @@ public class AssistUtils {
     }
 
 
-    public static void test() {
-
-        Map<String, String> map = new HashMap<>();
-        map.put("appid", "15499");
-        map.put("format", "json");
-        map.put("openid", "aa");
-        map.put("openkey", "ab");
-        map.put("pf", "ac");
-        map.put("pfkey", "ad");
-        map.put("ts", "1340880299");
-        map.put("userip", "112.90.139.30");
-        map.put("zoneid", "1");
-
-
-        YsdkSignUtil.getFinalSign("/v3/r/mpay/get_balance_m", "56abfbcd12fe46f5ad85ad9f12345678", map, "GET");
-
-    }
 
 
 }

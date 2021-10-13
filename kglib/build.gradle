@@ -54,10 +54,14 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation "com.android.support:appcompat-v7:${rootProject.ext.supportVersion}"
-    implementation "com.android.support:design:${rootProject.ext.supportVersion}"
-    implementation "com.android.support:support-v4:${rootProject.ext.supportVersion}"
+//    implementation "com.android.support:appcompat-v7:${rootProject.ext.supportVersion}"
+//    implementation "com.android.support:design:${rootProject.ext.supportVersion}"
+//    implementation "com.android.support:support-v4:${rootProject.ext.supportVersion}"
 
+    api 'androidx.appcompat:appcompat:1.1.0'
+
+    compileOnly 'com.google.code.gson:gson:2.8.5'
+    compileOnly 'com.alibaba:fastjson:1.2.47'
 //    implementation 'com.google.code.gson:gson:2.8.2'
 //    implementation 'com.zhy:okhttputils:2.6.2'
 //    implementation 'com.squareup.okhttp3:okhttp:3.10.0'

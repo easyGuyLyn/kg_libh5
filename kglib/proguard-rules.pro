@@ -22,7 +22,7 @@
 
 #---------------------------------基本指令区----------------------------------
 # 设置混淆的压缩比率 0 ~ 7
--optimizationpasses 7
+-optimizationpasses 5
 # 混淆后类名都为小写   Aa aA
 -dontusemixedcaseclassnames
 # 指定不去忽略非公共库的类
@@ -61,6 +61,11 @@
 -keep public class * extends android.app.backup.BackupAgentHelper
 -keep public class * extends android.preference.Preference
 -keep public class * extends android.view.View
+-keep public class * extends androidx.fragment.app.DialogFragment
+-keep public class * extends android.support.v4.app.FragmentManager
+-keep public class * extends android.support.v7.app.AppCompatActivity
+
+
 -keep public class com.android.vending.licensing.ILicensingService
 -keep class android.support.** {*;}
 
@@ -142,6 +147,13 @@
 -keep class com.zhy.http.**{*;}
 #-------------------------------------okhttputils--------------------------------------------------
 
+-keep class com.regus.mj.view.**{*;}
+
+-keep class com.regus.mj.utils.**{*;}
+
+-keep class com.regus.mj.config.**{*;}
+
+-keep class androidx.fragment.app.**{*;}
 
 
 #----------------------------------Begin: Gson  ---------------------------------------------
@@ -200,13 +212,13 @@
 
 
 #移除Log类打印各个等级日志的代码，打正式包的时候可以做为禁log使用，这里可以作为禁止log打印的功能使用，另外的一种实现方案是通过BuildConfig.DEBUG的变量来控制
--assumenosideeffects class android.util.Log {
-    public static *** v(...);
-    public static *** i(...);
-    public static *** d(...);
-   public static *** w(...);
-   public static *** e(...);
-}
+#-assumenosideeffects class android.util.Log {
+#    public static *** v(...);
+#    public static *** i(...);
+#    public static *** d(...);
+#   public static *** w(...);
+#   public static *** e(...);
+#}
 
 
 #########################################################
@@ -221,7 +233,7 @@
 -dontwarn javax.annotation.**                           #
 #                                                       #
 #########################################################
--keep class com.dawoo.chessbox.net.** { *; }     #对retrofit框架的封装，不可混淆。
+-keep class com.regus.mj.config.** { *; }     #对retrofit框架的封装，不可混淆。
 
 
 

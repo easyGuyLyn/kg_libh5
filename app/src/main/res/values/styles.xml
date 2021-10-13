@@ -1,11 +1,6 @@
 <resources>
 
 
-    <style name="SplashTheme" parent="BaseAppTheme">
-        <!-- 将splash图片设置在这，这样这张图片取代白屏 -->
-        <item name="android:windowFullscreen">true</item>
-    </style>
-
     <style name="LoadingDialog" parent="@android:style/Theme.Holo.Dialog.NoActionBar">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:backgroundDimEnabled">false</item>

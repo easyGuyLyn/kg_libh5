@@ -11,12 +11,13 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.graphics.Shader;
-import android.support.annotation.IntRange;
-import android.support.annotation.Keep;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
+
+import androidx.annotation.IntRange;
+import androidx.annotation.Keep;
+import androidx.annotation.Nullable;
 
 /**
  * 仿淘宝进度条

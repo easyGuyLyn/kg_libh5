@@ -1,1 +1,1 @@
-include ':app', ':baselib', ':kglib'
+include ':app', ':kglib'

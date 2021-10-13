@@ -28,7 +28,7 @@ android {
 
     def h5_url_3 = "\"http://m.isyacht.com/gouting/\""  //第四个模块url地址
 
-    def appId = "\"1\"" //app id
+    def appId = "\"353\"" //app id
 
     def jg_appkey = "c398428d15577c1ee6444bc3" //极光 appkey
 
@@ -39,6 +39,9 @@ android {
 
     def isWb = "false"
     //def isWb = "true"
+
+
+
 
 
     signingConfigs {
@@ -281,84 +284,34 @@ android {
                                     , JPUSH_CHANNEL: "developer-百度"]
         }
 //
-//
-//        魅族 {
-//            applicationId aid + ""
-//            resValue "string", "app_name", appName2
-//            resValue "string", "app_name2", appName
-//            resValue "string", "chanel", "12"
-//            manifestPlaceholders = [pro_id         : applicationId + pid_pex
-//                                    , r_process    : ":" + applicationId.substring(applicationId.lastIndexOf(".") + 1)
-//                                    , JPUSH_APPKEY : jg_appkey + ""
-//                                    , JPUSH_CHANNEL: "developer-魅族"]
-//        }
-//
-//        小米 {
-//            applicationId aid + ""
-//            resValue "string", "app_name", appName2
-//            resValue "string", "app_name2", appName
-//            resValue "string", "chanel", "8"
-//            manifestPlaceholders = [pro_id         : applicationId + pid_pex
-//                                    , r_process    : ":" + applicationId.substring(applicationId.lastIndexOf(".") + 1)
-//                                    , JPUSH_APPKEY : jg_appkey + ""
-//                                    , JPUSH_CHANNEL: "developer-小米"]
-//        }
-
-//        华为 {
-//            applicationId aid + ""
-//            resValue "string", "app_name", appName2
-//            resValue "string", "app_name2", appName
-//            resValue "string", "chanel", "6"
-//            manifestPlaceholders = [pro_id         : applicationId + pid_pex
-//                                    , r_process    : ":" + applicationId.substring(applicationId.lastIndexOf(".") + 1)
-//                                    , JPUSH_APPKEY : jg_appkey + ""
-//                                    , JPUSH_CHANNEL: "developer-华为"]
-//        }
-
-//        OPPO {
-//            applicationId aid + ""
-//            resValue "string", "app_name", appName2
-//            resValue "string", "app_name2", appName
-//            resValue "string", "chanel", "9"
-//            manifestPlaceholders = [pro_id         : applicationId + pid_pex
-//                                    , r_process    : ":" + applicationId.substring(applicationId.lastIndexOf(".") + 1)
-//                                    , JPUSH_APPKEY : jg_appkey + ""
-//                                    , JPUSH_CHANNEL: "developer-OPPO"]
-//        }
-
-//        '360' {
-//            applicationId aid + ""
-//            resValue "string", "app_name", appName2
-//            resValue "string", "app_name2", appName
-//            resValue "string", "chanel", "4"
-//            manifestPlaceholders = [pro_id         : applicationId + pid_pex
-//                                    , r_process    : ":" + applicationId.substring(applicationId.lastIndexOf(".") + 1)
-//                                    , JPUSH_APPKEY : jg_appkey + ""
-//                                    , JPUSH_CHANNEL: "developer-360"]
-//        }
-//
-//
-//        vivo {
-//            applicationId aid + ""
-//            resValue "string", "app_name", appName2
-//            resValue "string", "app_name2", appName
-//            resValue "string", "chanel", "3"
-//            manifestPlaceholders = [pro_id         : applicationId + pid_pex
-//                                    , r_process    : ":" + applicationId.substring(applicationId.lastIndexOf(".") + 1)
-//                                    , JPUSH_APPKEY : jg_appkey + ""
-//                                    , JPUSH_CHANNEL: "developer-vivo"]
-//        }
 
 
+
+
+    }
+}
+
+repositories{
+
+    flatDir{
+
+        dirs 'libs'
     }
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     //最_基础库
-    implementation project(':baselib')
+   // implementation project(':baselib')
+   // implementation (name:'kglib-debug',ext:'aar')
+   //  implementation project(path: ':kglib')
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.alibaba:fastjson:1.2.47'
+
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    //mmcc
+    //
     implementation files('libs/kgjar_v1.0.0.jar')
-    //   implementation project(path: ':kglib')
-   // implementation 'com.github.huxqI7:XRefreshView:3.7.0'
-    implementation 'com.huxq17.xrefreshview:xrefreshview:3.6.9'
+    implementation files('libs/kgjar_v1.0.0.jar')
+    // implementation 'com.github.huxqI7:XRefreshView:3.7.0'
 }
