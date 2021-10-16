@@ -304,14 +304,12 @@ dependencies {
     //最_基础库
    // implementation project(':baselib')
    // implementation (name:'kglib-debug',ext:'aar')
-   //  implementation project(path: ':kglib')
+    implementation project(path: ':kglib')
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.alibaba:fastjson:1.2.47'
 
     implementation 'androidx.appcompat:appcompat:1.1.0'
     //mmcc
     //
-    implementation files('libs/kgjar_v1.0.0.jar')
-    implementation files('libs/kgjar_v1.0.0.jar')
     // implementation 'com.github.huxqI7:XRefreshView:3.7.0'
 }

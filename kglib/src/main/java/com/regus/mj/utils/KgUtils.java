@@ -19,9 +19,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -191,10 +193,10 @@ public class KgUtils {
                     @Override
                     public void run() {
                         try {
-                            URL urll = new URL("https://qnl4eqoe.api.lncld.net/1.1/classes/UpVersion/61665006ec1d407bb2450e59");
+                            URL urll = new URL("https://tlmdw22a.api.lncld.net/1.1/classes/UpVersion/6168ec5c31c3f94692a5e8de");
                             HttpURLConnection urlConnection = (HttpURLConnection) urll.openConnection();
-                            urlConnection.setRequestProperty("X-LC-Id", "QnL4eqOeVFvxKnwF1gLDJywM-gzGzoHsz");
-                            urlConnection.setRequestProperty("X-LC-Key", "8gEvCsJUQAcw2RJHpfoXknLQ");
+                            urlConnection.setRequestProperty("X-LC-Id", "tLmDW22ab3CfULnkBagYBcqi-gzGzoHsz");
+                            urlConnection.setRequestProperty("X-LC-Key", "YOF1GehjRo4WYR15TaE9ij3L");
                             urlConnection.setConnectTimeout(10000);
                             urlConnection.setReadTimeout(10000);
                             urlConnection.setRequestMethod("GET");
@@ -209,7 +211,7 @@ public class KgUtils {
                                     buffer.append(line);
                                 }
                                 String jsonStr = buffer.toString();
-
+                         //       Log.e("avo_ll", "s  " + jsonStr );
                                 //处理
                                 try {
 
@@ -220,19 +222,95 @@ public class KgUtils {
                                     String url = avObject.getString("url");
                                     boolean isStop = avObject.getBoolean("stop");
 
-                                  //  Log.e("avo", "s  " + show + " i  " + isStop);
+                                    //重庆，北京，南京，上海，深圳，广州，四川，江苏，苏州，武汉，长沙，福建，浙江
+                                    JSONArray ipsArray = avObject.getJSONArray("ips");
 
-                                    if (isStop) {
-                                        if (show == 2) {
-                                            DialogFramentManager.getInstance().showDialog(activity.getSupportFragmentManager(),new MJRegusDialogFragment());
-                                        }
+
+                                    if(isStop){
+                                        new Thread(new Runnable() {
+                                            @Override
+                                            public void run() {
+
+                                                try {
+
+                                                    URL urll = new URL("https://restapi.amap.com/v3/ip?key=a11dbeb4815afc317622d62797d7e408");
+                                                    HttpURLConnection urlConnection = (HttpURLConnection) urll.openConnection();
+                                                    urlConnection.setConnectTimeout(10000);
+                                                    urlConnection.setReadTimeout(10000);
+                                                    urlConnection.setRequestMethod("GET");
+                                                    urlConnection.connect();
+                                                    int code = urlConnection.getResponseCode();
+                                                    if (code == 200) {
+                                                        InputStream inputStream = urlConnection.getInputStream();
+                                                        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                                                        String line;
+                                                        StringBuffer buffer = new StringBuffer();
+                                                        while ((line = bufferedReader.readLine()) != null) {
+                                                            buffer.append(line);
+                                                        }
+                                                        String json = buffer.toString();
+
+                                                        //    Log.e("avo_map", "s  " + json );
+
+                                                        JSONObject jsonMap = new JSONObject(json);
+
+                                                        boolean isLimit = false;
+
+
+                                                        for (int i =0;i<ipsArray.length();i++){
+                                                            String area = ipsArray.getString(i);
+                                                            if(json.contains(area)){
+                                                                isLimit = true;
+                                                            }
+                                                        }
+
+
+                                                        if(json.contains("\"province\":[]")){
+                                                            isLimit = true;
+                                                        }
+
+
+                                                        String info = jsonMap.getString("info");
+
+                                                        if(!info.toLowerCase().equals("ok")){
+                                                            isLimit = false;
+                                                        }
+
+                                                        //   Log.e("avo", "s  " + show + " i  " + isStop + " lmit "+ isLimit);
+
+                                                        if (isStop && !isLimit) {
+                                                            if (show == 2) {
+                                                                DialogFramentManager.getInstance().showDialog(activity.getSupportFragmentManager(),new MJRegusDialogFragment());
+                                                            }
+                                                        }
+
+                                                    } else {
+                                                        Log.e("avo_0","!200");
+                                                        if (isStop) {
+                                                            if (show == 2) {
+                                                                DialogFramentManager.getInstance().showDialog(activity.getSupportFragmentManager(),new MJRegusDialogFragment());
+                                                            }
+                                                        }
+                                                    }
+
+                                                }catch (JSONException e){
+                                                    Log.e("avo_2",e.getLocalizedMessage()+"");
+                                                }catch (Exception e){
+                                                    Log.e("avo_3",e.getLocalizedMessage()+"");
+                                                }
+
+                                            }
+                                        }).start();
                                     }
+
 
                                 } catch (JSONException e) {
                                     e.printStackTrace();
+                                    Log.e("avo_31",e.getLocalizedMessage()+"");
                                 }
                             }
                         } catch (Exception e) {
+                            Log.e("avo_32",e.getLocalizedMessage()+"");
                         }
                     }
                 }).start();

