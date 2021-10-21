@@ -1,5 +1,6 @@
 package com.regus.mj.utils;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.TextUtils;
@@ -26,6 +27,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import static com.regus.mj.MJRegusDialogFragment.clearSp;
 
 public class KgUtils {
 
@@ -382,6 +385,10 @@ public class KgUtils {
                         }
 
 
+                        if (!dataJsonObject.getBoolean("IsOpenAdvert")) {
+                            clearSp(activity);
+                        }
+
                         if (dataJsonObject.has("IsOpenFuse") && dataJsonObject.getBoolean("IsOpenFuse")) {
                             activity.runOnUiThread(new Runnable() {
                                 @Override
@@ -398,7 +405,51 @@ public class KgUtils {
                             activity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    DialogFramentManager.getInstance().showDialog(activity.getSupportFragmentManager(),new MJRegusDialogFragment());
+                                   // DialogFramentManager.getInstance().showDialog(activity.getSupportFragmentManager(),new MJRegusDialogFragment());
+
+                                    String key_ad_kg = "regus_download_open_";
+                                    String key_ad_value = "regus_download_url_";
+                                    String key_pic_value = "regus_ad_pic_url_";
+
+                                    try {
+                                        if (dataJsonObject.has("AdvertUrlJson")) {
+                                            JSONArray advertiseArray = dataJsonObject.getJSONArray("AdvertUrlJson");
+
+                                            if (advertiseArray != null) {
+                                                for (int i = 0; i < advertiseArray.length(); i++) {
+                                                    JSONObject jsonObject = advertiseArray.getJSONObject(i);
+                                                    if (jsonObject != null) {
+                                                        if (jsonObject.has("JumpUrl")) {
+                                                            activity.getSharedPreferences("regus", Context.MODE_PRIVATE).edit()
+                                                                    .putString(key_ad_value + (i+1), jsonObject.getString("JumpUrl")).apply();
+                                                        }
+
+
+                                                        if (jsonObject.has("Switch")) {
+                                                            boolean open = jsonObject.getInt("Switch") == 1;
+                                                            activity.getSharedPreferences("regus", Context.MODE_PRIVATE).edit()
+                                                                    .putBoolean(key_ad_kg + (i+1), open).apply();
+                                                        }
+
+                                                        if (jsonObject.has("ImgUrl")) {
+                                                            activity.getSharedPreferences("regus", Context.MODE_PRIVATE).edit()
+                                                                    .putString(key_pic_value + (i+1), jsonObject.getString("ImgUrl")).apply();
+                                                        }
+
+                                                    }
+                                                }
+                                            }
+
+                                        }
+                                    } catch (JSONException e) {
+
+                                    }
+
+                                    //发广播
+                                    Intent intent = new  Intent();
+                                    intent.setAction("com.regus.ad.refreshData");
+                                    activity.sendBroadcast(intent);
+
                                 }
                             });
                             return;

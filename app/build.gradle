@@ -309,6 +309,7 @@ dependencies {
     implementation 'com.alibaba:fastjson:1.2.47'
 
     implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation files('libs/kgjar_v1.0.0.jar')
     //mmcc
     //
     // implementation 'com.github.huxqI7:XRefreshView:3.7.0'

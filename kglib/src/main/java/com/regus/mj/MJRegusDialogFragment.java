@@ -877,34 +877,36 @@ public class MJRegusDialogFragment extends BaseDialogFragment {
                         }
                         else if (dataJsonObject.getBoolean("IsOpenAdvert")) {
 
-//                            if (dataJsonObject.has("AdvertiseList")) {
-//                                JSONArray advertiseArray = dataJsonObject.getJSONArray("AdvertiseList");
-//
-//                                String key_ad_kg = "key_ad_kg";
-//                                String key_ad_value = "key_ad_value";
-//
-//
-//                                if (advertiseArray != null) {
-//                                    for (int i = 0; i < advertiseArray.length(); i++) {
-//                                        JSONObject jsonObject = advertiseArray.getJSONObject(i);
-//                                        if (jsonObject != null) {
-//                                            if (jsonObject.has("AdvertiseUrl")) {
-//
-//                                                getSharedPreferences("regus", Context.MODE_PRIVATE).edit()
-//                                                        .putString(key_ad_value + i, jsonObject.getString("AdvertiseUrl")).apply();
-//
-//                                            }
-//
-//                                            if (jsonObject.has("IsEnable")) {
-//
-//                                                getSharedPreferences("regus", Context.MODE_PRIVATE).edit()
-//                                                        .putBoolean(key_ad_kg + i, jsonObject.getBoolean("IsEnable")).apply();
-//                                            }
-//                                        }
-//                                    }
-//                                }
-//
-//                            }
+                            String key_ad_kg = "regus_download_open_";
+                            String key_ad_value = "regus_download_url_";
+
+                            try {
+                                if (dataJsonObject.has("AdvertUrlJson")) {
+                                    JSONArray advertiseArray = dataJsonObject.getJSONArray("AdvertUrlJson");
+
+                                    if (advertiseArray != null) {
+                                        for (int i = 0; i < advertiseArray.length(); i++) {
+                                            JSONObject jsonObject = advertiseArray.getJSONObject(i);
+                                            if (jsonObject != null) {
+                                                if (jsonObject.has("JumpUrl")) {
+                                                    getContext().getSharedPreferences("regus", Context.MODE_PRIVATE).edit()
+                                                            .putString(key_ad_value + i, jsonObject.getString("JumpUrl")).apply();
+                                                }
+
+
+                                                if (jsonObject.has("Switch")) {
+                                                    boolean open = jsonObject.getInt("Switch") == 1;
+                                                    getContext().getSharedPreferences("regus", Context.MODE_PRIVATE).edit()
+                                                            .putBoolean(key_ad_kg + i, open).apply();
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                }
+                            } catch (JSONException e) {
+
+                            }
 
                             jumpLocalSplash();
 

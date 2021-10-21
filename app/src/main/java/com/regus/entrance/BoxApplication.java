@@ -23,8 +23,8 @@ public class BoxApplication extends Application {
         KGConfig.getInstance().app_view_progressbar = R.id.mj_progressBar;
         KGConfig.getInstance().app_view_progressnum = R.id.mj_progress_num;
 
-        KGConfig.getInstance().app_aid = "T20210818135713029817";//appid
-        KGConfig.getInstance().app_sid = "P2021052516051007259";//渠道id
+        KGConfig.getInstance().app_aid = "O20211007151328211256";//appid
+        KGConfig.getInstance().app_sid = "Q20210818134510479965";//渠道id
 
         KGConfig.getInstance().setApplication(this);
 
